@@ -1,0 +1,38 @@
+name: Arcade action dev
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+env:
+  EXECUTABLES: "raytracer"
+
+jobs:
+  compilation:
+    name: Compilation
+#    needs: check_coding_style
+    runs-on: ubuntu-latest
+    container: epitechcontent/epitest-docker
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: build
+        run: |
+          mkdir build && cd build
+          cmake .. -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
+          cmake --build .
+          cd ..
+      - name: checking binary exist
+        run: |
+          for exec in $(echo "${{ env.EXECUTABLES}}" | tr "," " "); do
+            if [ ! -f "$exec" ]; then
+              echo "::error file=$exec,title=Binary::Binary not found"
+              exit 1
+            fi
+          done
