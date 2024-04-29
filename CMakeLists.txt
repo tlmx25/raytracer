@@ -10,6 +10,11 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g3 -fno-gnu-u
 #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,leak,undefined")
 
 include_directories(src)
+include_directories(src/maths)
+include_directories(src/material)
+include_directories(src/camera)
+include_directories(src/primitive)
+include_directories(src/list_object)
 
 
 add_executable(${PROJECT_NAME} src/main.cpp)
