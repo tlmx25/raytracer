@@ -12,11 +12,13 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g3 -fno-gnu-u
 include_directories(src)
 
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/builder/builder.hpp
+        src/builder/builder.cpp)
 
-#TARGET_LINK_LIBRARIES(arcade dl)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 
-add_subdirectory(librairies/template)
+#add_subdirectory(librairies/template)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "lib")
 

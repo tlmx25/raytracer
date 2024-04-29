@@ -45,3 +45,5 @@ c_cpp_properties.json
 /coding-style-reports.log
 cmake-build-debug/*
 cmake-build-release/*
+raytracer
+build/*
