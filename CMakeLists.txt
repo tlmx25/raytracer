@@ -27,6 +27,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 
 #add_subdirectory(librairies/template)
+add_subdirectory(librairies/lambertian)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "lib")
 
