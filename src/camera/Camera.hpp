@@ -7,10 +7,11 @@
 
 #pragma once
 
-#include "hittable.hpp"
+#include "IPrimitive.hpp"
 #include "color.hpp"
-#include "utils.hpp"
+#include "Utils.hpp"
 #include "Imaterial.hpp"
+
 class Camera {
   public:
 
@@ -19,7 +20,7 @@ class Camera {
     int samples_per_pixel = 10;
     int max_depth = 10;
 
-    void render(const hittable& world) {
+    void render(const IPrimitive& world) {
         initialize();
 
         std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";

@@ -7,10 +7,10 @@
 
 #pragma once
 
-#include "interval.hpp"
-#include "vec3.hpp"
+#include "Interval.hpp"
+#include "Vec3.hpp"
 
-using color = vec3;
+using Color = Vec3;
 
 inline double linear_to_gamma(double linear_component)
 {
@@ -20,4 +20,4 @@ inline double linear_to_gamma(double linear_component)
     return 0;
 }
 
-void write_color(std::ostream& out, const color& pixel_color);
+void write_color(std::ostream& out, const Color& pixel_color);

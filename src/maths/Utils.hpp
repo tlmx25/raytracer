@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include <cmath>
-#include <iostream>
-#include <limits>
-#include <cstdlib>
-#include <memory>
+    #include <cmath>
+    #include <iostream>
+    #include <limits>
+    #include <cstdlib>
+    #include <memory>
 
 using std::fabs;
 using std::make_shared;
@@ -24,8 +24,6 @@ const double pi = 3.1415926535897932385;
 class Utils {
     public:
         static double degrees_to_radians(double degrees);
-
         static double random_double(double min, double max);
         static double random_double();
-
 };
