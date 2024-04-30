@@ -7,11 +7,13 @@
 
 #pragma once
 
-#include "utils.hpp"
 #include "hittable.hpp"
-#include "material.hpp"
+#include "color.hpp"
+#include "utils.hpp"
+//#include "material.hpp"
+double random_double();
 
-class camera {
+class Camera {
   public:
 
     double aspect_ratio = 1.0;

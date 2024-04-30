@@ -8,14 +8,14 @@
 #pragma once
 
 #include "utils.hpp"
-#include "hittable.hpp"
-
+#include "color.hpp"
+#include "ray.hpp"
+class hit_record;
 
 class IMaterial {
   public:
     virtual ~IMaterial() = default;
 
-    virtual bool scatter(
-        const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
+    virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
     ) const = 0;
 };

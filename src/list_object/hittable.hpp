@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "utils.hpp"
-
-class IMaterial;
+#include "Imaterial.hpp"
+#include "ray.hpp"
+#include "interval.hpp"
 
 class hit_record {
   public:

@@ -19,7 +19,10 @@ include_directories(src/list_object)
 
 add_executable(${PROJECT_NAME} src/main.cpp
         src/builder/builder.hpp
-        src/builder/builder.cpp)
+        src/builder/builder.cpp
+        src/maths/interval.cpp
+        src/maths/utils.cpp
+        src/material/Color.cpp)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 
