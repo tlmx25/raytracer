@@ -5,20 +5,20 @@
 ** main
 */
 
-#include "utils.hpp"
-
-#include "camera.hpp"
-#include "hittable.hpp"
+#include "Camera.hpp"
 #include "hittables.hpp"
 #include "material.hpp"
 #include "sphere.hpp"
+#include <memory>
+#include "builder/builder.hpp"
+
 
 int main() {
 
     hittable_list world;
 
-    auto material_ground = make_shared<lambertian>(color(0.8, 0.8, 0.0));
-    auto material_center = make_shared<lambertian>(color(0.1, 0.2, 0.5));
+    auto material_ground = make_shared<Lambertian>(color(0.8, 0.8, 0.0));
+    auto material_center = make_shared<Lambertian>(color(0.1, 0.2, 0.5));
     auto material_left   = make_shared<metal>(color(0.8, 0.8, 0.8));
     auto material_right  = make_shared<metal>(color(0.8, 0.6, 0.2));
 
@@ -27,7 +27,7 @@ int main() {
     world.add(make_shared<sphere>(point3(-1.0,    0.0, -1.0),   0.5, material_left));
     world.add(make_shared<sphere>(point3( 1.0,    0.0, -1.0),   0.5, material_right));
 
-    camera cam;
+    Camera cam;
 
     cam.aspect_ratio = 16.0 / 9.0;
     cam.image_width  = 400;
@@ -35,4 +35,5 @@ int main() {
     cam.max_depth = 50;
 
     cam.render(world);
+
 }

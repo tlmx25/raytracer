@@ -6,6 +6,7 @@
 */
 
 #pragma once
+#include "utils.hpp"
 
 class interval {
   public:
@@ -35,6 +36,3 @@ class interval {
 
     static const interval empty, universe;
 };
-
-const interval interval::empty    = interval(+infinity, -infinity);
-const interval interval::universe = interval(-infinity, +infinity);

@@ -17,11 +17,15 @@ include_directories(src/primitive)
 include_directories(src/list_object)
 
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} src/main.cpp
+        src/builder/builder.cpp
+        src/maths/interval.cpp
+        src/maths/utils.cpp
+        src/material/color.cpp)
 
-#TARGET_LINK_LIBRARIES(arcade dl)
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 
-add_subdirectory(librairies/template)
+#add_subdirectory(librairies/template)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "lib")
 

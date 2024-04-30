@@ -6,18 +6,14 @@
 */
 
 #pragma once
-
-#include "utils.hpp"
-#include "hittable.hpp"
-
-
-class material {
+    #include "utils.hpp"
+    #include "color.hpp"
+    #include "ray.hpp"
+    #include "hittable.hpp"
+class IMaterial {
   public:
-    virtual ~material() = default;
+    virtual ~IMaterial() = default;
 
-    virtual bool scatter(
-        const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
-    ) const {
-        return false;
-    }
+    virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
+    ) const = 0;
 };

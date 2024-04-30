@@ -56,11 +56,11 @@ class vec3 {
     }
 
     static vec3 random() {
-        return vec3(random_double(), random_double(), random_double());
+        return vec3(Utils::random_double(), Utils::random_double(), Utils::random_double());
     }
 
     static vec3 random(double min, double max) {
-        return vec3(random_double(min,max), random_double(min,max), random_double(min,max));
+        return vec3(Utils::random_double(min,max), Utils::random_double(min,max), Utils::random_double(min,max));
     }
 };
 

@@ -7,18 +7,27 @@
 
 #pragma once
 
-#include "utils.hpp"
-#include "hittable.hpp"
+#include <libconfig.h++>
+#include "vec3.hpp"
 #include "Imaterial.hpp"
+#define UNUSED __attribute__((unused))
 
-class lambertian : public material {
+class Lambertian : public IMaterial {
   public:
-    lambertian(const color& albedo) : albedo(albedo) {}
+    Lambertian(const color& albedo) : albedo(albedo) {}
+    Lambertian(const libconfig::Setting &settings) {
+        try {
+            albedo = color(settings["albedo"][0], settings["albedo"][1], settings["albedo"][2]);
+        } catch(const libconfig::SettingNotFoundException &nfex) {
+            std::cerr << "Lambertian: Missing 'albedo' setting in configuration." << std::endl;
+            std::cerr << "example : Lambertian = { albedo = { 0.5, 0.5, 0.5 } }" << std::endl;
+            throw nfex;
+        }
+    }
 
-    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
-    const override {
+    virtual bool scatter(UNUSED const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
+    const override{
         auto scatter_direction = rec.normal + random_unit_vector();
-
          if (scatter_direction.near_zero())
             scatter_direction = rec.normal;
 
@@ -31,7 +40,7 @@ class lambertian : public material {
     color albedo;
 };
 
-class metal : public material {
+class metal : public IMaterial {
   public:
     metal(const color& albedo) : albedo(albedo) {}
 

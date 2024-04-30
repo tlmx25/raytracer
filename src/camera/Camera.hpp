@@ -7,11 +7,11 @@
 
 #pragma once
 
-#include "utils.hpp"
 #include "hittable.hpp"
-#include "material.hpp"
-
-class camera {
+#include "color.hpp"
+#include "utils.hpp"
+#include "Imaterial.hpp"
+class Camera {
   public:
 
     double aspect_ratio = 1.0;
@@ -80,7 +80,7 @@ class camera {
     }
 
     vec3 sample_square() const {
-        return vec3(random_double() - 0.5, random_double() - 0.5, 0);
+        return vec3(Utils::random_double() - 0.5, Utils::random_double() - 0.5, 0);
     }
 
     color ray_color(const ray& r, int depth, const hittable& world) const {

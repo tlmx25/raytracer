@@ -7,15 +7,15 @@
 
 #pragma once
 
-#include "utils.hpp"
-
-class material;
+#include "ray.hpp"
+#include "interval.hpp"
+class IMaterial;
 
 class hit_record {
   public:
     point3 p;
     vec3 normal;
-    shared_ptr<material> mat;
+    shared_ptr<IMaterial> mat;
     double t;
 
     bool front_face;
