@@ -6,7 +6,6 @@
 */
 
 #include "builder.hpp"
-#include "material.hpp"
 
 Builder::Builder(const char *path)
 {
@@ -53,8 +52,7 @@ std::map<std::string, shared_ptr<IMaterial>> Builder::getMaterials()
             throw std::runtime_error("Builder: error on reading material.");
         }
         if (type == "lambertian") {
-
-            mat = std::make_shared<Lambertian>(material);
+            //TODO: faire tom
         }
         materials[name] = mat;
     }
