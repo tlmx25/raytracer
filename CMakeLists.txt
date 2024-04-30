@@ -19,10 +19,17 @@ include_directories(src/list_object)
 
 add_executable(${PROJECT_NAME} src/main.cpp
         src/builder/builder.cpp
-        src/maths/interval.cpp
-        src/maths/utils.cpp
-        src/material/color.cpp
-        src/DlLoader/CLibEncapsulation.cpp)
+        src/maths/Interval.cpp
+        src/maths/Utils.cpp
+        src/maths/Ray.cpp
+        src/maths/Vec3.cpp
+        src/material/Color.cpp
+        src/DlLoader/CLibEncapsulation.cpp
+        src/camera/Camera.cpp
+        src/list_object/HitRecord.cpp
+        src/primitive/PrimList.cpp
+        src/primitive/Sphere.cpp
+        )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 

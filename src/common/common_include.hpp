@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Color.hpp"
-#include "Ray.hpp"
-#include "Vec3.hpp"
-#include "Interval.hpp"
+    #include "Color.hpp"
+    #include "Ray.hpp"
+    #include "Vec3.hpp"
+    #include "Interval.hpp"
