@@ -8,6 +8,7 @@
 #pragma once
 #include <iostream>
 #include <libconfig.h++>
+#include "Imaterial.hpp"
 
 class Builder {
     public:

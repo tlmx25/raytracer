@@ -10,12 +10,13 @@
 #include "utils.hpp"
 #include "hittable.hpp"
 #include "Imaterial.hpp"
+#define UNUSED __attribute__((unused))
 
-class lambertian : public material {
+class lambertian : public IMaterial {
   public:
     lambertian(const color& albedo) : albedo(albedo) {}
 
-    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
+    bool scatter(UNUSED const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered)
     const override {
         auto scatter_direction = rec.normal + random_unit_vector();
 
@@ -31,7 +32,7 @@ class lambertian : public material {
     color albedo;
 };
 
-class metal : public material {
+class metal : public IMaterial {
   public:
     metal(const color& albedo) : albedo(albedo) {}
 

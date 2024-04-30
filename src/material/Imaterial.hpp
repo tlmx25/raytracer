@@ -11,13 +11,11 @@
 #include "hittable.hpp"
 
 
-class material {
+class IMaterial {
   public:
-    virtual ~material() = default;
+    virtual ~IMaterial() = default;
 
     virtual bool scatter(
         const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
-    ) const {
-        return false;
-    }
+    ) const = 0;
 };
