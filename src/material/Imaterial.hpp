@@ -6,12 +6,10 @@
 */
 
 #pragma once
-
-#include "utils.hpp"
-#include "color.hpp"
-#include "ray.hpp"
-class hit_record;
-
+    #include "utils.hpp"
+    #include "color.hpp"
+    #include "ray.hpp"
+    #include "hittable.hpp"
 class IMaterial {
   public:
     virtual ~IMaterial() = default;

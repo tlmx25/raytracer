@@ -10,9 +10,7 @@
 #include "hittable.hpp"
 #include "color.hpp"
 #include "utils.hpp"
-//#include "material.hpp"
-double random_double();
-
+#include "Imaterial.hpp"
 class Camera {
   public:
 
@@ -82,7 +80,7 @@ class Camera {
     }
 
     vec3 sample_square() const {
-        return vec3(random_double() - 0.5, random_double() - 0.5, 0);
+        return vec3(Utils::random_double() - 0.5, Utils::random_double() - 0.5, 0);
     }
 
     color ray_color(const ray& r, int depth, const hittable& world) const {
