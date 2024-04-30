@@ -10,10 +10,9 @@
 #include "utils.hpp"
 #include "hittable.hpp"
 
-
-class material {
+class Material {
   public:
-    virtual ~material() = default;
+    virtual ~Material() = default;
 
     virtual bool scatter(
         const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered
