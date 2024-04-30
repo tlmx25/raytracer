@@ -7,12 +7,7 @@
 
 #pragma once
 
-#ifndef RAYTRACER_COMMON_INCLUDE_HPP
-#define RAYTRACER_COMMON_INCLUDE_HPP
-
-
-#include "color.hpp"
-#include "ray.hpp"
-#include "vec3.hpp"
-#include "interval.hpp"
-#endif //RAYTRACER_COMMON_INCLUDE_HPP
+    #include "Color.hpp"
+    #include "Ray.hpp"
+    #include "Vec3.hpp"
+    #include "Interval.hpp"

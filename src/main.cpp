@@ -6,16 +6,16 @@
 */
 
 #include "Camera.hpp"
-#include "hittables.hpp"
+#include "PrimList.hpp"
 // #include "material.hpp"
-#include "sphere.hpp"
+#include "Sphere.hpp"
 #include <memory>
 #include "builder/builder.hpp"
 
 
 int main() {
 
-    hittable_list world;
+    PrimList world;
 
     // auto material_ground = make_shared<Lambertian>(color(0.8, 0.8, 0.0));
     // auto material_center = make_shared<Lambertian>(color(0.1, 0.2, 0.5));
