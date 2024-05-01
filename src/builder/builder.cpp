@@ -75,8 +75,8 @@ PrimList Builder::getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &ma
         for (int j = 0; j < prim_list.getLength(); j++) {
             const libconfig::Setting &prim_cfg = prim_list[j];
             try {
-                IPrimitive *prim = this->getObjectFromLib<IPrimitive *>(type, prim_cfg);
-                auto shared_prim = std::shared_ptr<IPrimitive>(prim);
+                APrimitive *prim = this->getObjectFromLib<APrimitive *>(type, prim_cfg);
+                auto shared_prim = std::shared_ptr<APrimitive>(prim);
                 if (prim_cfg.exists("material")) {
                     this->setMaterials(materials, shared_prim, prim_cfg);
                 } else if (prim_cfg.exists("color")) {
@@ -93,7 +93,7 @@ PrimList Builder::getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &ma
     return primitives;
 }
 
-void Builder::setColor(const libconfig::Setting &setting, std::shared_ptr<IPrimitive> &primitive)
+void Builder::setColor(const libconfig::Setting &setting, std::shared_ptr<APrimitive> &primitive)
 {
     try {
         Color color = Vec3::parseVec3(setting);
@@ -105,7 +105,7 @@ void Builder::setColor(const libconfig::Setting &setting, std::shared_ptr<IPrimi
     }
 }
 
-void Builder::setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materials, std::shared_ptr<IPrimitive> primitive, const libconfig::Setting &materialSettings)
+void Builder::setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materials, std::shared_ptr<APrimitive> primitive, const libconfig::Setting &materialSettings)
 {
     std::string name;
     try {

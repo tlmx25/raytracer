@@ -7,17 +7,19 @@
 
 #pragma once
 
-    #include "IPrimitive.hpp"
+    #include <utility>
+
+#include "IPrimitive.hpp"
 
 class APrimitive : public IPrimitive {
     public:
-        APrimitive();
-        APrimitive(shared_ptr<IMaterial> _mat);
-        APrimitive(const APrimitive &obj);
-        ~APrimitive();
+        APrimitive() = default;
+        explicit APrimitive(shared_ptr<IMaterial> _mat) : mat(_mat) {}
+        APrimitive(const APrimitive &obj) : mat(obj.mat) {}
+        ~APrimitive() = default;
     public:
-        shared_ptr<IMaterial> getMat() const;
-        void setMat(shared_ptr<IMaterial> _mat);
+        shared_ptr<IMaterial> getMaterial() const {return mat;}
+        void setMaterial(shared_ptr<IMaterial> _mat) {mat = _mat;};
         virtual bool hit(const Ray &ray, Interval ray_t, HitRecord &rec) const override = 0;
     public:
         APrimitive &operator=(const APrimitive &obj);

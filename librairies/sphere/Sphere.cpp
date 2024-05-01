@@ -7,12 +7,12 @@
 
 #include "Sphere.hpp"
 
-Sphere::Sphere(const Point3& center, double radius, shared_ptr<IMaterial> mat) : center(center),
-radius(fmax(0,radius)), APrimitive(mat)
+Sphere::Sphere(const Point3& center, double radius, shared_ptr<IMaterial> mat) :  APrimitive(mat), center(center),
+radius(fmax(0,radius))
 {
 }
 
-Sphere::Sphere(const Sphere &obj) : center(obj.center), radius(obj.radius), APrimitive(obj.getMat())
+Sphere::Sphere(const Sphere &obj) : APrimitive(obj.getMaterial()), center(obj.center), radius(obj.radius)
 {
 }
 
@@ -60,7 +60,7 @@ bool Sphere::hit(const Ray& r, Interval ray_t, HitRecord& rec) const
     rec.p = r.at(rec.t);
     Vec3 outward_normal = (rec.p - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    rec.mat = this->getMat();
+    rec.mat = this->getMaterial();
     return true;
 }
 
@@ -70,7 +70,7 @@ Sphere &Sphere::operator=(const Sphere &obj)
         return *this;
     this->center = obj.center;
     this->radius = obj.radius;
-    this->setMat(obj.getMat());
+    this->setMaterial(obj.getMaterial());
     return *this;
 }
 
