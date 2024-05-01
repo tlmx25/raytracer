@@ -15,11 +15,14 @@ class PrimList : public IPrimitive {
     public:
         PrimList();
         PrimList(shared_ptr<IPrimitive> object);
+        PrimList(const PrimList &obj);
         ~PrimList();
     public:
         void clear();
         void add(shared_ptr<IPrimitive> object);
         bool hit(const Ray &ray, Interval ray_t, HitRecord &rec) const override;
+    public:
+        PrimList &operator=(const PrimList &obj);
     public:
         std::vector<shared_ptr<IPrimitive>> objects;
 };

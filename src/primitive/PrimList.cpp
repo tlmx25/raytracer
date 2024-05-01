@@ -11,6 +11,11 @@ PrimList::PrimList()
 {
 }
 
+PrimList::PrimList(const PrimList &obj)
+{
+    this->objects = obj.objects;
+}
+
 PrimList::PrimList(shared_ptr<IPrimitive> object)
 {
     this->add(object);
@@ -44,4 +49,13 @@ bool PrimList::hit(const Ray &ray, Interval ray_t, HitRecord &rec) const
         }
     }
     return hit_anything;
+}
+
+PrimList &PrimList::operator=(const PrimList &obj)
+{
+    if (this == &obj)
+        return *this;
+    
+    this->objects = obj.objects;
+    return *this;
 }
