@@ -10,10 +10,12 @@
     #include "Ray.hpp"
     #include "Interval.hpp"
     #include "HitRecord.hpp"
+#include "IMaterial.hpp"
 
 class IPrimitive {
     public:
         virtual ~IPrimitive() = default;
     public:
         virtual bool hit(const Ray &ray, Interval ray_t, HitRecord &rec) const = 0;
+        virtual void setMaterial(shared_ptr<IMaterial> &mat)  = 0;
 };

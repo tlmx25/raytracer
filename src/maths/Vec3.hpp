@@ -7,7 +7,8 @@
 
 #pragma once
 
-    #include "Utils.hpp"
+#include "Utils.hpp"
+#include <libconfig.h++>
 
 class Vec3 {
     public:
@@ -21,6 +22,7 @@ class Vec3 {
         double length() const;
         double length_squared() const;
         bool near_zero() const;
+        static Vec3 parseVec3(const libconfig::Setting &setting);
     public:
         Vec3 operator-() const;
         double operator[](int i) const;

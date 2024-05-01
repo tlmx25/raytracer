@@ -28,12 +28,12 @@ class CLibEncapsulation {
          * @return T The element.
          */
         template<class T>
-        T getElement(std::string const &elementName, const libconfig::Setting &settings) {
+        T getElement(const libconfig::Setting &settings) {
             if (!this->isLibOpen) {
                 this->setError("Library is not open");
                 return nullptr;
             }
-            T (*element)() = (T(*)(const libconfig::Setting &)) getFunction(elementName);
+            T (*element)(const libconfig::Setting &) = (T (*)(const libconfig::Setting &) ) getFunction("entryPoint");
             if (!element) {
                 this->setError(dlerror());
                 return nullptr;
@@ -49,12 +49,12 @@ class CLibEncapsulation {
 
     public:
         bool isLibOpen = false;
+        bool failed = false;
 
     private:
         void *lib = nullptr;
         std::string libPath;
         void setError(std::string const &error);
-        bool failed = false;
         std::string _error;
 
 public:
