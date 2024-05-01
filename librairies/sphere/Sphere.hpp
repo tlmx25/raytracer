@@ -7,12 +7,15 @@
 
 #pragma once
 
+#include <libconfig.h++>
   #include "APrimitive.hpp"
   #include "Utils.hpp"
 
 class Sphere : public APrimitive {
   public:
     Sphere(const Point3& center, double radius, shared_ptr<IMaterial> mat);
+    Sphere(const libconfig::Setting &settings);
+    virtual void setMaterial(shared_ptr<IMaterial> &mat) override;
     Sphere(const Sphere &obj);
     ~Sphere();
   public:
@@ -22,4 +25,8 @@ class Sphere : public APrimitive {
   private:
     Point3 center;
     double radius;
+    shared_ptr<IMaterial> mat;
+    Color color;
 };
+
+extern "C" IPrimitive *entryPoint(const libconfig::Setting &settings);

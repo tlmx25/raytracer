@@ -51,6 +51,15 @@ bool PrimList::hit(const Ray &ray, Interval ray_t, HitRecord &rec) const
     return hit_anything;
 }
 
+void PrimList::setMaterial(UNUSED std::shared_ptr<IMaterial> &mat)
+{
+}
+
+int PrimList::size() const
+{
+    return this->objects.size();
+}
+
 PrimList &PrimList::operator=(const PrimList &obj)
 {
     if (this == &obj)
