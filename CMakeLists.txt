@@ -37,6 +37,8 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 #add_subdirectory(librairies/template)
 add_subdirectory(librairies/lambertian)
 add_subdirectory(librairies/sphere)
+add_subdirectory(librairies/metals)
+add_subdirectory(librairies/dialectric)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "lib")
 

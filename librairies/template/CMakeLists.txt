@@ -16,6 +16,9 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g")
 
 #add_executable(${LIB_NAME} main.cpp)
 add_library(${LIB_NAME} SHARED main.cpp)
+
+
+TARGET_LINK_LIBRARIES(${LIB_NAME} config++)
 set_target_properties(${LIB_NAME} PROPERTIES PREFIX "")
 
 
