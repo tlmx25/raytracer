@@ -15,14 +15,15 @@ Lambertian::Lambertian(const Color& albedo) : albedo(albedo)
 Lambertian::Lambertian(const libconfig::Setting &settings)
 {
     try {
-        albedo = Color(settings["albedo"][0], settings["albedo"][1], settings["albedo"][2]);
-        // TODO : TOM gestion du damier
-
-        //tex = make_shared<Solid_color>(albedo);
-        tex = make_shared<Checker_tex>(0.32, albedo, Color(.9, .9, .9));
+        albedo = Vec3::parseVec3(settings["albedo"]);
+        if (settings.exists("color"))
+            tex = make_shared<Checker_tex>(0.32, albedo, Vec3::parseVec3(settings["color"]));
+        else {
+            tex = make_shared<Solid_color>(albedo);
+        }
     } catch(const libconfig::SettingNotFoundException &nfex) {
         std::cerr << "Lambertian: Missing 'albedo' setting in configuration." << std::endl;
-        std::cerr << "example : Lambertian = { albedo = { 0.5; 0.5; 0.5 } }" << std::endl;
+        std::cerr << "example : Lambertian = { albedo = { x = 0.5; y = 0.5; z= 0.5 } }" << std::endl;
         throw nfex;
     }
 }
