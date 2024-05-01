@@ -8,7 +8,6 @@
 #include "Camera.hpp"
 #include "PrimList.hpp"
 // #include "material.hpp"
-#include "Sphere.hpp"
 #include <memory>
 #include "builder/builder.hpp"
 
@@ -34,6 +33,15 @@ int main() {
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
 
-    cam.render(world);
+//    cam.render(world);
+    Builder builder("/home/tom/tek/tek2/OOP/PRIVATE_RAYTRACER/config.cfg");
+    auto materials = builder.getMaterials();
 
+//    for (auto const& [key, val] : materials) {
+//        std::cout << key << " => " << val << std::endl;
+//    }
+
+    auto primitives = builder.getPrimitives(materials);
+//    std::cout << primitives.size() << std::endl;
+    cam.render(primitives);
 }

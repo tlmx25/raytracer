@@ -84,3 +84,18 @@ bool Vec3::near_zero() const
 
     return (fabs(this->e[0]) < s) && (fabs(this->e[1]) < s) && (fabs(this->e[2]) < s);
 }
+
+Vec3 Vec3::parseVec3(const libconfig::Setting &setting)
+{
+    double x, y, z;
+
+    try {
+        setting.lookupValue("x", x);
+        setting.lookupValue("y", y);
+        setting.lookupValue("z", z);
+    } catch (const libconfig::SettingNotFoundException &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        throw e;
+    }
+    return Vec3(x, y, z);
+}
