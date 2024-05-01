@@ -23,5 +23,7 @@ class HitRecord {
     Vec3 normal;
     shared_ptr<IMaterial> mat;
     double t;
+    double u;
+    double v;
     bool front_face;
 };

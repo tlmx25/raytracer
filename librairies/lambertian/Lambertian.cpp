@@ -10,13 +10,16 @@
 
 Lambertian::Lambertian(const Color& albedo) : albedo(albedo)
 {
-
 }
 
 Lambertian::Lambertian(const libconfig::Setting &settings)
 {
     try {
         albedo = Color(settings["albedo"][0], settings["albedo"][1], settings["albedo"][2]);
+        // TODO : TOM gestion du damier
+
+        //tex = make_shared<Solid_color>(albedo);
+        tex = make_shared<Checker_tex>(0.32, albedo, Color(.9, .9, .9));
     } catch(const libconfig::SettingNotFoundException &nfex) {
         std::cerr << "Lambertian: Missing 'albedo' setting in configuration." << std::endl;
         std::cerr << "example : Lambertian = { albedo = { 0.5; 0.5; 0.5 } }" << std::endl;
@@ -36,7 +39,7 @@ bool Lambertian::scatter(UNUSED const Ray& r_in, const HitRecord& rec, Color& at
         scatter_direction = rec.normal;
 
     scattered = Ray(rec.p, scatter_direction);
-    attenuation = albedo;
+    attenuation = tex->value(rec.u, rec.v, rec.p);;
     return true;
 }
 
