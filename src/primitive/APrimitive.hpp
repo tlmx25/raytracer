@@ -11,6 +11,7 @@
 
 class APrimitive : public IPrimitive {
     public:
+        APrimitive();
         APrimitive(shared_ptr<IMaterial> _mat);
         APrimitive(const APrimitive &obj);
         ~APrimitive();

@@ -7,10 +7,12 @@
 
 #include "APrimitive.hpp"
 
+APrimitive::APrimitive()
+{
+}
+
 APrimitive::APrimitive(shared_ptr<IMaterial> _mat) : mat(_mat)
 {
-    if (_mat == nullptr)
-        throw PrimError("APrimitive : Material can't be null");
 }
 
 APrimitive::APrimitive(const APrimitive &obj)
