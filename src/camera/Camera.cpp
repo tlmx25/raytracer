@@ -15,24 +15,6 @@ Camera::~Camera()
 {
 }
 
-// void Camera::render(const IPrimitive& world)
-// {    
-//     initialize();
-//     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-//     for (int j = 0; j < image_height; j++) {
-//         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
-//         for (int i = 0; i < image_width; i++) {
-//             Color pixel_color(0,0,0);
-//             for (int sample = 0; sample < samples_per_pixel; sample++) {
-//                 Ray r = get_ray(i, j);
-//                 pixel_color += ray_color(r, max_depth, world);
-//             }
-//             write_color(std::cout, pixel_samples_scale * pixel_color);
-//         }
-//     }
-//     std::clog << "\rDone.                 \n";
-// }
-
 void Camera::render_section(const IPrimitive& world, const Camera& cam, int startX, int endX, int startY, int endY)
 {
     for (int j = startY; j < endY; j++) {
