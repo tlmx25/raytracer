@@ -7,12 +7,16 @@
 
 #include "Sphere.hpp"
 
-Sphere::Sphere(const Point3& center, double radius, shared_ptr<IMaterial> mat) : center(center),
-radius(fmax(0,radius)), mat(mat)
+Sphere::Sphere(const Point3& center, double radius, shared_ptr<IMaterial> mat) :  APrimitive(mat), center(center),
+radius(fmax(0,radius))
 {
 }
 
-Sphere::Sphere(const libconfig::Setting &settings)
+Sphere::Sphere(const Sphere &obj) : APrimitive(obj.getMaterial()), center(obj.center), radius(obj.radius)
+{
+}
+
+Sphere::Sphere(const libconfig::Setting &settings) : APrimitive()
 {
     try {
         float radius_str = 84;
@@ -56,13 +60,18 @@ bool Sphere::hit(const Ray& r, Interval ray_t, HitRecord& rec) const
     rec.p = r.at(rec.t);
     Vec3 outward_normal = (rec.p - center) / radius;
     rec.set_face_normal(r, outward_normal);
-    rec.mat = mat;
+    rec.mat = this->getMaterial();
     return true;
 }
 
-void Sphere::setMaterial(std::shared_ptr<IMaterial> &mat)
+Sphere &Sphere::operator=(const Sphere &obj)
 {
-    this->mat = mat;
+    if (this == &obj)
+        return *this;
+    this->center = obj.center;
+    this->radius = obj.radius;
+    this->setMaterial(obj.getMaterial());
+    return *this;
 }
 
 extern "C" IPrimitive *entryPoint(const libconfig::Setting &settings)
