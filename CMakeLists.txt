@@ -15,6 +15,7 @@ include_directories(src/material)
 include_directories(src/camera)
 include_directories(src/primitive)
 include_directories(src/list_object)
+include_directories(src/DlLoader)
 
 
 add_executable(${PROJECT_NAME} src/main.cpp
@@ -28,14 +29,16 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/camera/Camera.cpp
         src/list_object/HitRecord.cpp
         src/primitive/PrimList.cpp
-        src/primitive/Sphere.cpp
-        )
+        src/material/ColorMat.cpp
+)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 
 #add_subdirectory(librairies/template)
 add_subdirectory(librairies/lambertian)
+add_subdirectory(librairies/sphere)
 add_subdirectory(librairies/metals)
+add_subdirectory(librairies/dialectric)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "lib")
 

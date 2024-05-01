@@ -12,16 +12,16 @@
   #include "IMaterial.hpp"
   #define UNUSED __attribute__((unused))
 
-class Metal : public IMaterial {
+class Dialectric : public IMaterial {
   public:
-    Metal(const Color& albedo, double fuzz) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
-    Metal(const libconfig::Setting &settings);
-    ~Metal();
+    Dialectric(const Color& albedo);
+    Dialectric(const libconfig::Setting &settings);
+    ~Dialectric();
   public:
     bool scatter(UNUSED const Ray& r_in, const HitRecord& rec, Color& attenuation, Ray& scattered) const override;
+    double reflectance(double cosine, double refraction_index);
   private:
-    Color albedo;
-    double fuzz;
+    double refraction_index;
 };
 
-extern "C" IMaterial *entryPointMetal(const libconfig::Setting &settings);
+extern "C" IMaterial *entryPoint(const libconfig::Setting &settings);

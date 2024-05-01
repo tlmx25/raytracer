@@ -24,4 +24,4 @@ class Metal : public IMaterial {
     double fuzz;
 };
 
-extern "C" IMaterial *entryPointMetal(const libconfig::Setting &settings);
+extern "C" IMaterial *entryPoint(const libconfig::Setting &settings);

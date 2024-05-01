@@ -23,4 +23,4 @@ class Lambertian : public IMaterial {
     Color albedo;
 };
 
-extern "C" IMaterial *entryPointLambertian(const libconfig::Setting &settings);
+extern "C" IMaterial *entryPoint(const libconfig::Setting &settings);
