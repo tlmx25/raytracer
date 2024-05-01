@@ -18,6 +18,7 @@ class Camera {
         ~Camera();
     public:
         void render(const IPrimitive& world);
+        void render_section(const IPrimitive& world, const Camera& cam, int startX, int endX, int startY, int endY);
         void initialize();
         Ray get_ray(int i, int j) const;
         Vec3 sample_square() const;

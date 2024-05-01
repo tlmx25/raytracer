@@ -15,22 +15,59 @@ Camera::~Camera()
 {
 }
 
-void Camera::render(const IPrimitive& world)
-{    
-    initialize();
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-    for (int j = 0; j < image_height; j++) {
-        std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
-        for (int i = 0; i < image_width; i++) {
+// void Camera::render(const IPrimitive& world)
+// {    
+//     initialize();
+//     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+//     for (int j = 0; j < image_height; j++) {
+//         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
+//         for (int i = 0; i < image_width; i++) {
+//             Color pixel_color(0,0,0);
+//             for (int sample = 0; sample < samples_per_pixel; sample++) {
+//                 Ray r = get_ray(i, j);
+//                 pixel_color += ray_color(r, max_depth, world);
+//             }
+//             write_color(std::cout, pixel_samples_scale * pixel_color);
+//         }
+//     }
+//     std::clog << "\rDone.                 \n";
+// }
+
+void Camera::render_section(const IPrimitive& world, const Camera& cam, int startX, int endX, int startY, int endY)
+{
+    for (int j = startY; j < endY; j++) {
+        std::clog << "\rScanlines remaining: " << (endY - j) << ' ' << std::flush;
+        for (int i = startX; i < endX; i++) {
             Color pixel_color(0,0,0);
             for (int sample = 0; sample < samples_per_pixel; sample++) {
-                Ray r = get_ray(i, j);
-                pixel_color += ray_color(r, max_depth, world);
+                Ray r = cam.get_ray(i, j);
+                pixel_color += cam.ray_color(r, max_depth, world);
             }
             write_color(std::cout, pixel_samples_scale * pixel_color);
         }
     }
+}
+
+
+void Camera::render(const IPrimitive& world)
+{
+    std::vector<std::thread> threads;
+    unsigned int num_threads = std::thread::hardware_concurrency();
+
+    if (num_threads == 0)
+        num_threads = 8;
+    initialize();
+    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    int sectionHeight = image_height / (2 * num_threads);
+    for (unsigned int i = 0; i < num_threads; ++i) {
+        int startY = i * sectionHeight * 2;
+        int endY = (i + 1) * sectionHeight * 2;
+        threads.emplace_back(&Camera::render_section, this, std::cref(world), std::cref(*this), 0, image_width, startY, endY);
+    }
+    for (auto& thread : threads)
+        thread.join();
     std::clog << "\rDone.                 \n";
+    // std::cout << num_threads << std::endl;
 }
 
 void Camera::initialize() {
