@@ -12,6 +12,8 @@
     #include <limits>
     #include <cstdlib>
     #include <memory>
+    #include <vector>
+    #include <thread>
 
 using std::fabs;
 using std::make_shared;
