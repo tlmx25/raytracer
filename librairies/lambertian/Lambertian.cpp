@@ -16,7 +16,8 @@ Lambertian::Lambertian(const Color& albedo) : albedo(albedo)
 Lambertian::Lambertian(const libconfig::Setting &settings)
 {
     try {
-        albedo = Color(settings["albedo"][0], settings["albedo"][1], settings["albedo"][2]);
+        albedo = Vec3::parseVec3(settings["albedo"]);
+//        albedo = Color(settings["albedo"][0], settings["albedo"][1], settings["albedo"][2]);
     } catch(const libconfig::SettingNotFoundException &nfex) {
         std::cerr << "Lambertian: Missing 'albedo' setting in configuration." << std::endl;
         std::cerr << "example : Lambertian = { albedo = { 0.5; 0.5; 0.5 } }" << std::endl;

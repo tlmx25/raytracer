@@ -41,7 +41,7 @@ void Camera::initialize() {
 
     center = Point3(0, 0, 0);
 
-    auto focal_length = 1.0;
+    auto focal_length = 0.5;
     auto viewport_height = 2.0;
     auto viewport_width = viewport_height * (double(image_width)/image_height);
     auto viewport_u = Vec3(viewport_width, 0, 0);

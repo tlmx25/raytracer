@@ -85,8 +85,9 @@ PrimList Builder::getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &ma
                     throw BuilderError("Builder: error on reading prim_list: no material or color.");
                 primitives.add(shared_prim);
             } catch (const CLibEncapsulation::LibException &e) {
+                std::cerr << "Error: " << e.what() << std::endl;
                 std::cerr << "Builder: error on reading prim_list." << std::endl;
-                throw std::runtime_error("Builder: error on reading prim_list.");
+                throw BuilderError("Builder: error on reading prim_list.");
             }
         }
     }

@@ -17,7 +17,18 @@ Plan::Plan(const Plan &obj) : APrimitive(obj.getMaterial()), _dir(obj._dir), _ce
 
 Plan::Plan(const libconfig::Setting &settings)
 {
-    (void)settings;
+    Vec3 dir;
+    Point3 center;
+
+    if (!settings.exists("direction") || !settings.exists("center")) {
+        std::cerr << "invalid Plan settings, example : " << std::endl;
+        std::cerr << "plan= (center = {0; 0; 0}; direction = {0; 0; 1})" << std::endl;
+        throw Plan::PrimError("Plan: missing dir or center.");
+    }
+    dir = Vec3::parseVec3(settings["direction"]);
+    center = Point3::parseVec3(settings["center"]);
+    _dir = dir;
+    _center = center;
 }
 
 Plan::~Plan()
@@ -44,4 +55,9 @@ Plan &Plan::operator=(const Plan &obj)
     this->_dir = obj._dir;
     this->setMaterial(obj.getMaterial());
     return *this;
+}
+
+extern "C" IPrimitive *entryPoint(const libconfig::Setting &settings)
+{
+    return new Plan(settings);
 }

@@ -23,3 +23,5 @@ class Plan : public APrimitive {
     Vec3 _dir;
     Point3 _center;
 };
+
+extern "C" IPrimitive *entryPoint(const libconfig::Setting &settings);
