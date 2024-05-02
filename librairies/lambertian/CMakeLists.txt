@@ -15,6 +15,7 @@ SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g")
 
 
 #add_executable(${LIB_NAME} main.cpp)
+include_directories(${PROJECT_SOURCE_DIR}/librairies/common)
 add_library(${LIB_NAME} SHARED Lambertian.cpp ../common/CheckerTex.cpp ../common/SolidColor.cpp)
 set_target_properties(${LIB_NAME} PROPERTIES PREFIX "")
 
