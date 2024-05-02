@@ -18,7 +18,7 @@ Solid_color::Solid_color(double red, double green, double blue) : Solid_color(Co
     
 }
 
-Color Solid_color::value(double u, double v, const Point3& p) const
+Color Solid_color::value(UNUSED double u,UNUSED double v,UNUSED const Point3& p) const
 {
     return albedo;
 }

@@ -8,7 +8,7 @@
 #pragma once
 
   #include <libconfig.h++>
-  #include "CheckerTex.hpp"
+  #include "../common/CheckerTex.hpp"
   #include "Vec3.hpp"
   #include "IMaterial.hpp"
   #define UNUSED __attribute__((unused))
