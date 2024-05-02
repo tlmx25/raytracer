@@ -34,7 +34,7 @@ int main() {
     cam.max_depth = 50;
 
 //    cam.render(world);
-    Builder builder("/home/justine/Documents/tek2/raytracer/raytracer/config.cfg");
+    Builder builder("ConfigFile/config.cfg");
     auto materials = builder.getMaterials();
 
 //    for (auto const& [key, val] : materials) {

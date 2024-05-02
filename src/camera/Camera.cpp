@@ -36,8 +36,9 @@ void Camera::render(const IPrimitive& world)
 
 void Camera::render_section(const IPrimitive& world, const Camera& cam, std::vector<std::string> &buffer, int startX, int endX, int startY, int endY, int id)
 {
+    std::cerr << "thread " << id << " : " << startY << " -> " << endY << std::endl;
     for (int j = startY; j < endY; j++) {
-        std::clog << "\rid : "<< id<<"  |Scanlines remaining: " << (endY - j) << ' ' << std::flush;
+        std::clog << "id : "<< id<<"  |Scanlines remaining: " << (endY - j) << ' ' << std::endl;
         for (int i = startX; i < endX; i++) {
             Color pixel_color(0,0,0);
             for (int sample = 0; sample < samples_per_pixel; sample++) {
@@ -47,7 +48,7 @@ void Camera::render_section(const IPrimitive& world, const Camera& cam, std::vec
             write_color_multithread(buffer[j], pixel_samples_scale * pixel_color);
         }
     }
-    std::cerr << "Thread done\n";
+    std::cerr << "Thread " << id << " done" << std::endl;
 }
 
 void Camera::renderMultithread(const IPrimitive& world)
@@ -60,7 +61,7 @@ void Camera::renderMultithread(const IPrimitive& world)
     initialize();
     std::vector<std::string> buffer(image_height);
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-    num_threads = 2;
+    num_threads = 3;
     int sectionHeight = image_height / num_threads;
     std::cerr << "height: " << image_height << " sectionHeight: " << sectionHeight << " num_threads: " << num_threads << "\n";
     for (unsigned int i = 0; i < num_threads; i++) {
@@ -68,8 +69,10 @@ void Camera::renderMultithread(const IPrimitive& world)
         int endY = (i + 1) * sectionHeight;
         if (i == num_threads - 1)
             endY = image_height;
-        std::cerr << "Thread " << i << " : " << startY << " -> " << endY << std::endl;
-        threads.emplace_back(&Camera::render_section, this, std::ref(world), std::ref(*this), std::ref(buffer), 0, image_width, startY, endY, i);
+        //afficher l'adress du premier buffer
+        dprintf(2, "buffer[%d] : %p\n", i, &buffer[startY]);
+//        std::cerr << "Thread " << i << " : " << startY << " -> " << endY << std::endl;
+        threads.emplace_back(&Camera::render_section, this, std::ref(world), *this, std::ref(buffer), 0, image_width, startY, endY, i);
     }
     for (auto& thread : threads)
         thread.join();
