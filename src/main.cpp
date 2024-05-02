@@ -29,12 +29,12 @@ int main() {
     Camera cam;
 
     cam.aspect_ratio = 16.0 / 9.0;
-    cam.image_width  = 400;
-    cam.samples_per_pixel = 100;
+    cam.image_width  = 1200;
+    cam.samples_per_pixel = 200;
     cam.max_depth = 50;
 
 //    cam.render(world);
-    Builder builder("/home/tom/tek/tek2/OOP/PRIVATE_RAYTRACER/config.cfg");
+    Builder builder("/home/justine/Documents/tek2/raytracer/raytracer/config.cfg");
     auto materials = builder.getMaterials();
 
 //    for (auto const& [key, val] : materials) {
@@ -43,5 +43,13 @@ int main() {
 
     auto primitives = builder.getPrimitives(materials);
 //    std::cout << primitives.size() << std::endl;
-    cam.render(primitives);
+    cam.renderMultithread(primitives);
+
+    // real    0m1,347s
+    // user    0m1,258s
+    // sys     0m0,089s
+
+    // real    0m5,806s
+    // user    0m8,856s
+    // sys     1m15,775s
 }

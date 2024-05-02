@@ -21,3 +21,4 @@ inline double linear_to_gamma(double linear_component)
 }
 
 void write_color(std::ostream& out, const Color& pixel_color);
+void write_color_multithread(std::string &buffer, const Color& pixel_color);
