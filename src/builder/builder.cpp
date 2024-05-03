@@ -54,8 +54,8 @@ std::map<std::string, shared_ptr<IMaterial>> Builder::getMaterials()
         try {
             mat = std::shared_ptr<IMaterial>(this->getObjectFromLib<IMaterial *>(type, material));
         } catch (const CLibEncapsulation::LibException &e) {
-            std::cerr << "Builder: error on reading material." << std::endl;
-            throw std::runtime_error("Builder: error on reading material.");
+            std::cerr << "Builder: error on reading material :" << e.what() << std::endl;
+            throw BuilderError("Builder: error on reading material.");
         }
         materials[name] = mat;
     }
