@@ -99,3 +99,10 @@ Vec3 Vec3::parseVec3(const libconfig::Setting &setting)
     }
     return Vec3(x, y, z);
 }
+
+void Vec3::reset()
+{
+    this->e[0] = 0;
+    this->e[1] = 0;
+    this->e[2] = 0;
+}

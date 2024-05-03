@@ -25,7 +25,7 @@ void write_color(std::ostream& out, const Color& pixel_color)
     int bbyte = int(256 * intensity.clamp(b));
 
     // Write out the pixel color components.
-    out << rbyte << ' ' << gbyte << ' ' << bbyte << '\n';
+    out << rbyte << ' ' << gbyte << ' ' << bbyte << std::endl;
 }
 
 void write_color_multithread(std::string &buffer, const Color& pixel_color)
