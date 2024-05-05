@@ -39,6 +39,7 @@ add_subdirectory(librairies/lambertian)
 add_subdirectory(librairies/sphere)
 add_subdirectory(librairies/metals)
 add_subdirectory(librairies/dialectric)
+add_subdirectory(librairies/plan)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "lib")
 
