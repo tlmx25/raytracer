@@ -58,7 +58,11 @@ bool Cone::hit(const Ray& r, Interval ray_t, HitRecord& rec) const
     }
     rec.t = root;
     rec.p = r.at(rec.t);
-    Vec3 outward_normal = (rec.p - this->_center) / this->_radius;
+    double normeSqX = (rec.p.x() - this->_center.x()) * (rec.p.x() - this->_center.x());
+    double normeSqY = (rec.p.y() - this->_center.y()) * (rec.p.y() - this->_center.y());
+    double normeSqZ = (rec.p.z() - this->_center.z()) * (rec.p.z() - this->_center.z());
+    double norme = sqrt(normeSqX + normeSqY + normeSqZ);
+    Vec3 outward_normal = (rec.p - _center) / norme;
     rec.set_face_normal(r, outward_normal);
     rec.mat = this->getMaterial();
     return true;
