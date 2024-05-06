@@ -7,12 +7,12 @@
 
 #include "Cone.hpp"
 
-Cone::Cone(const double radius, const Point3& center, shared_ptr<IMaterial> mat) :  APrimitive(mat), _center(center),
-_radius(fmax(0,radius))
+Cone::Cone(const double radius, const Point3& center, shared_ptr<IMaterial> mat) :  APrimitive(mat), _radius(fmax(0,radius)),
+_center(center)
 {
 }
 
-Cone::Cone(const Cone &obj) : APrimitive(obj.getMaterial()), _center(obj._center), _radius(obj._radius)
+Cone::Cone(const Cone &obj) : APrimitive(obj.getMaterial()), _radius(obj._radius), _center(obj._center)
 {
 }
 
@@ -41,9 +41,27 @@ Cone::~Cone()
 
 bool Cone::hit(const Ray& r, Interval ray_t, HitRecord& rec) const
 {
-    (void)r;
-    (void)ray_t;
-    (void)rec;
+    Vec3 oc = Vec3(r.origin().x() - _center.x(), r.origin().y() - _center.y(), r.origin().z() - _center.z());
+    double a = r.direction().x() * r.direction().x() + r.direction().z() * r.direction().z() - r.direction().y() * r.direction().y();
+    double b = 2 * (oc.x() * r.direction().x() + oc.z() * r.direction().z() - oc.y() * r.direction().y());
+    double c = oc.x() * oc.x() + oc.z() * oc.z() - oc.y() * oc.y();
+
+    double disc = b * b - 4 * a * c;
+    if (disc < 0)
+        return false;
+    double sqrtd = sqrt(disc);
+    double root = (-b - sqrtd) / (2 * a);
+    if (root < ray_t.min || root > ray_t.max) {
+        root = (-b + sqrtd) / (2 * a);
+        if (root < ray_t.min || root > ray_t.max)
+            return false;
+    }
+    rec.t = root;
+    rec.p = r.at(rec.t);
+    Vec3 outward_normal = (rec.p - this->_center) / this->_radius;
+    rec.set_face_normal(r, outward_normal);
+    rec.mat = this->getMaterial();
+    return true;
 }
 
 Cone &Cone::operator=(const Cone &obj)
