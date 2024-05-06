@@ -12,6 +12,7 @@
     #include <limits>
     #include <cstdlib>
     #include <memory>
+    #include <libconfig.h++>
 
 using std::fabs;
 using std::make_shared;
@@ -26,4 +27,7 @@ class Utils {
         static double degrees_to_radians(double degrees);
         static double random_double();
         static double random_double(double min, double max);
+        static double settings_get_double(const libconfig::Setting &setting, const char *name);
+        static int settings_get_int(const libconfig::Setting &setting, const char *name);
+        static double settings_get_ratio(const libconfig::Setting &setting);
 };

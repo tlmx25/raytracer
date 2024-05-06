@@ -23,6 +23,27 @@ Camera::Camera()
     focus_dist    = 1.0;
 }
 
+Camera::Camera(const libconfig::Setting &settings)
+{
+    aspect_ratio = Utils::settings_get_ratio(settings["aspect_ratio"]);
+    settings.lookupValue("image_width", image_width);
+    settings.lookupValue("vfov", vfov);
+    lookfrom = Vec3::parseVec3(settings["lookfrom"]);
+    lookat = Vec3::parseVec3(settings["lookat"]);
+
+    if (settings.exists("vup"))
+        vup = Vec3::parseVec3(settings["vup"]);
+    if (settings.exists("defocus_angle"))
+        defocus_angle = Utils::settings_get_double(settings, "defocus_angle");
+    if (settings.exists("focus_dist"))
+        focus_dist = Utils::settings_get_double(settings, "focus_dist");
+    if (settings.exists("samples_per_pixel"))
+        samples_per_pixel = Utils::settings_get_double(settings, "samples_per_pixel");
+    if (settings.exists("max_depth"))
+        max_depth= Utils::settings_get_int(settings, "max_depth");
+    initialize();
+}
+
 Camera::~Camera()
 {
 }

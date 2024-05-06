@@ -15,6 +15,7 @@
 class Camera {
     public:
         Camera();
+        explicit Camera(const libconfig::Setting &settings);
         ~Camera();
     public:
         void render(const IPrimitive& world);
