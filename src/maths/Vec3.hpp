@@ -23,6 +23,7 @@ class Vec3 {
         double length_squared() const;
         bool near_zero() const;
         static Vec3 parseVec3(const libconfig::Setting &setting);
+        static double getValue(const libconfig::Setting &setting, std::string name);
     public:
         Vec3 operator-() const;
         double operator[](int i) const;
