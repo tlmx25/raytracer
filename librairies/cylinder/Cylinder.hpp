@@ -11,7 +11,7 @@
 
 class Cylinder : public APrimitive {
     public:
-        Cylinder(double radius, const Vec3& center, shared_ptr<IMaterial> mat);
+        Cylinder(double radius, const Point3& center, shared_ptr<IMaterial> mat);
         Cylinder(const libconfig::Setting &settings);
         Cylinder(const Cylinder &obj);
         ~Cylinder();
