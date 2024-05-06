@@ -119,3 +119,19 @@ void Builder::setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materia
         throw BuilderError("Builder: error on reading material.");
     }
 }
+
+Camera Builder::getCamera()
+{
+    const libconfig::Setting &root = _cfg.getRoot();
+
+    try {
+        if (!root.exists("camera")) {
+            throw BuilderError("Builder: camera not found.");
+        }
+        const libconfig::Setting &camera_cfg = root["camera"];
+        Camera camera(camera_cfg);
+        return camera;
+    } catch (const libconfig::SettingNotFoundException &e) {
+        throw BuilderError("Builder: error on reading camera : " + std::string(e.what()));
+    }
+}
