@@ -27,7 +27,7 @@ class Cylinder : public APrimitive {
             v = theta / M_PI;
         };
         double _radius;
-        Vec3 _center;
+        Point3 _center;
 };
 
 extern "C" IPrimitive *entryPoint(const libconfig::Setting &settings);

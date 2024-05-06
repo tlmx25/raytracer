@@ -7,7 +7,7 @@
 
 #include "Cylinder.hpp"
 
-Cylinder::Cylinder(double radius, const Vec3& center, shared_ptr<IMaterial> mat) : APrimitive(mat), _radius(radius), _center(center)
+Cylinder::Cylinder(double radius, const Point3& center, shared_ptr<IMaterial> mat) : APrimitive(mat), _radius(radius), _center(center)
 {
 }
 
