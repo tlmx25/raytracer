@@ -15,6 +15,7 @@
 class Camera {
     public:
         Camera();
+        explicit Camera(const libconfig::Setting &settings);
         ~Camera();
     public:
         void render(const IPrimitive& world);
@@ -24,11 +25,20 @@ class Camera {
         Ray get_ray(int i, int j) const;
         Vec3 sample_square() const;
         Color ray_color(const Ray& r, int depth, const IPrimitive& world) const;
+        Point3 defocus_disk_sample() const;
     public:
         double aspect_ratio = 1.0;
         int image_width  = 100;
         int samples_per_pixel = 10;
         int max_depth = 10;
+
+        double vfov = 90;
+        Point3 lookfrom = Point3(0,0,0);
+        Point3 lookat = Point3(0,0,-1);
+        Vec3 vup = Vec3(0,1,0);
+
+        double defocus_angle = 0;
+        double focus_dist = 10;
     private:
         int image_height;
         double pixel_samples_scale;
@@ -36,4 +46,7 @@ class Camera {
         Point3 pixel00_loc;
         Vec3 pixel_delta_u;
         Vec3 pixel_delta_v;
+        Vec3 u, v, w;
+        Vec3 defocus_disk_u;
+        Vec3 defocus_disk_v;
 };

@@ -11,6 +11,7 @@
 #include <memory>
 #include "builder/builder.hpp"
 
+<<<<<<< HEAD
 
 int main() {
 
@@ -52,4 +53,37 @@ int main() {
     // real    0m5,806s
     // user    0m8,856s
     // sys     1m15,775s
+=======
+static void print_usage()
+{
+    std::cout << "USAGE: ./raytracer [config_file]" << std::endl;
+}
+
+int main(int ac, char **av)
+{
+
+    if (ac != 2) {
+        print_usage();
+        return 84;
+    }
+    if (std::string(av[1]) == "-h") {
+        print_usage();
+        return 0;
+    }
+    try {
+        PrimList world;
+
+        Camera cam;
+
+        Builder builder(av[1]);
+        cam = builder.getCamera();
+        auto materials = builder.getMaterials();
+
+        auto primitives = builder.getPrimitives(materials);
+        cam.render(primitives);
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
+>>>>>>> dev
 }

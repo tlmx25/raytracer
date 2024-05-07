@@ -7,7 +7,7 @@
 
 #include "ColorMat.hpp"
 
-bool ColorMat::scatter(const Ray &ray, const HitRecord &record, Color &attenuation, Ray &scattered) const
+bool ColorMat::scatter(UNUSED const Ray &ray, const HitRecord &record, Color &attenuation, Ray &scattered) const
 {
     attenuation = _color;
     scattered = Ray(record.p, record.normal);
