@@ -54,8 +54,8 @@ std::map<std::string, shared_ptr<IMaterial>> Builder::getMaterials()
         try {
             mat = std::shared_ptr<IMaterial>(this->getObjectFromLib<IMaterial *>(type, material));
         } catch (const CLibEncapsulation::LibException &e) {
-            std::cerr << "Builder: error on reading material." << std::endl;
-            throw std::runtime_error("Builder: error on reading material.");
+            std::cerr << "Builder: error on reading material :" << e.what() << std::endl;
+            throw BuilderError("Builder: error on reading material.");
         }
         materials[name] = mat;
     }
@@ -75,8 +75,8 @@ PrimList Builder::getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &ma
         for (int j = 0; j < prim_list.getLength(); j++) {
             const libconfig::Setting &prim_cfg = prim_list[j];
             try {
-                IPrimitive *prim = this->getObjectFromLib<IPrimitive *>(type, prim_cfg);
-                auto shared_prim = std::shared_ptr<IPrimitive>(prim);
+                APrimitive *prim = this->getObjectFromLib<APrimitive *>(type, prim_cfg);
+                auto shared_prim = std::shared_ptr<APrimitive>(prim);
                 if (prim_cfg.exists("material")) {
                     this->setMaterials(materials, shared_prim, prim_cfg);
                 } else if (prim_cfg.exists("color")) {
@@ -85,15 +85,16 @@ PrimList Builder::getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &ma
                     throw BuilderError("Builder: error on reading prim_list: no material or color.");
                 primitives.add(shared_prim);
             } catch (const CLibEncapsulation::LibException &e) {
+                std::cerr << "Error: " << e.what() << std::endl;
                 std::cerr << "Builder: error on reading prim_list." << std::endl;
-                throw std::runtime_error("Builder: error on reading prim_list.");
+                throw BuilderError("Builder: error on reading prim_list.");
             }
         }
     }
     return primitives;
 }
 
-void Builder::setColor(const libconfig::Setting &setting, std::shared_ptr<IPrimitive> &primitive)
+void Builder::setColor(const libconfig::Setting &setting, std::shared_ptr<APrimitive> &primitive)
 {
     try {
         Color color = Vec3::parseVec3(setting);
@@ -105,7 +106,7 @@ void Builder::setColor(const libconfig::Setting &setting, std::shared_ptr<IPrimi
     }
 }
 
-void Builder::setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materials, std::shared_ptr<IPrimitive> primitive, const libconfig::Setting &materialSettings)
+void Builder::setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materials, std::shared_ptr<APrimitive> primitive, const libconfig::Setting &materialSettings)
 {
     std::string name;
     try {
@@ -116,5 +117,21 @@ void Builder::setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materia
         primitive->setMaterial(materials[name]);
     } catch (const libconfig::SettingNotFoundException &e) {
         throw BuilderError("Builder: error on reading material.");
+    }
+}
+
+Camera Builder::getCamera()
+{
+    const libconfig::Setting &root = _cfg.getRoot();
+
+    try {
+        if (!root.exists("camera")) {
+            throw BuilderError("Builder: camera not found.");
+        }
+        const libconfig::Setting &camera_cfg = root["camera"];
+        Camera camera(camera_cfg);
+        return camera;
+    } catch (const libconfig::SettingNotFoundException &e) {
+        throw BuilderError("Builder: error on reading camera : " + std::string(e.what()));
     }
 }

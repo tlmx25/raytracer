@@ -90,9 +90,9 @@ Vec3 Vec3::parseVec3(const libconfig::Setting &setting)
     double x, y, z;
 
     try {
-        setting.lookupValue("x", x);
-        setting.lookupValue("y", y);
-        setting.lookupValue("z", z);
+        x = Vec3::getValue(setting, "x");
+        y = Vec3::getValue(setting, "y");
+        z = Vec3::getValue(setting, "z");
     } catch (const libconfig::SettingNotFoundException &e) {
         std::cerr << "Error: " << e.what() << std::endl;
         throw e;
@@ -105,4 +105,26 @@ void Vec3::reset()
     this->e[0] = 0;
     this->e[1] = 0;
     this->e[2] = 0;
+}
+
+double Vec3::getValue(const libconfig::Setting &setting, std::string name)
+{
+    double value_double = 0.0;
+    int value_int = 0;
+    bool isintValue = false;
+
+    try {
+        if (setting[name.c_str()].getType() == libconfig::Setting::TypeInt) {
+            setting.lookupValue(name, value_int);
+            isintValue = true;
+        }
+        else if (setting[name.c_str()].getType() == libconfig::Setting::TypeFloat)
+            setting.lookupValue(name, value_double);
+    } catch (const libconfig::SettingNotFoundException &e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        throw e;
+    }
+    if (isintValue)
+        return value_int;
+    return value_double;
 }

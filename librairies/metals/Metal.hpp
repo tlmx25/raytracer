@@ -8,21 +8,20 @@
 #pragma once
 
   #include <libconfig.h++>
-  #include "CheckerTex.hpp"
   #include "Vec3.hpp"
   #include "IMaterial.hpp"
   #define UNUSED __attribute__((unused))
 
-class Lambertian : public IMaterial {
+class Metal : public IMaterial {
   public:
-    Lambertian(const Color& albedo);
-    Lambertian(const libconfig::Setting &settings);
-    ~Lambertian();
+    Metal(const Color& albedo, double fuzz) : albedo(albedo), fuzz(fuzz < 1 ? fuzz : 1) {}
+    Metal(const libconfig::Setting &settings);
+    ~Metal();
   public:
     bool scatter(UNUSED const Ray& r_in, const HitRecord& rec, Color& attenuation, Ray& scattered) const override;
   private:
     Color albedo;
-    shared_ptr<ITexture> tex;
+    double fuzz;
 };
 
 extern "C" IMaterial *entryPoint(const libconfig::Setting &settings);

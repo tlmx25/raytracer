@@ -15,6 +15,8 @@
 #include "CLibEncapsulation.hpp"
 #include "PrimList.hpp"
 #include "ColorMat.hpp"
+#include "APrimitive.hpp"
+#include "Camera.hpp"
 
 class Builder {
     public:
@@ -23,6 +25,7 @@ class Builder {
         ~Builder() {};
         std::map<std::string, shared_ptr<IMaterial>> getMaterials();
         PrimList getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &materials);
+        Camera getCamera();
 
     template<class Type>
     Type getObjectFromLib(std::string &name, const libconfig::Setting &settings)
@@ -42,8 +45,8 @@ class Builder {
     private:
         libconfig::Config _cfg;
         std::string pluginPath = "./plugins/";
-        void setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materials, std::shared_ptr<IPrimitive> primitive, const libconfig::Setting &material);
-        void setColor(const libconfig::Setting &setting, std::shared_ptr<IPrimitive> &primitive);
+        void setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materials, std::shared_ptr<APrimitive> primitive, const libconfig::Setting &material);
+        void setColor(const libconfig::Setting &setting, std::shared_ptr<APrimitive> &primitive);
 
 
     public:
