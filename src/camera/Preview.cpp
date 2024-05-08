@@ -26,3 +26,17 @@ void Preview::init()
     texture.loadFromImage(image);
     sprite.setTexture(texture);
 }
+
+void Preview::display()
+{
+    while (window.isOpen()) {
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+        texture.update(image);
+        window.clear();
+        window.draw(sprite);
+        window.display();
+    }
+}

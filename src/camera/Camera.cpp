@@ -50,32 +50,22 @@ Camera::~Camera()
 
 void Camera::display_preview(Preview &preview, const IPrimitive& world)
 {
-    while (preview.window.isOpen()) {
-        while (preview.window.pollEvent(preview.event)) {
-            if (preview.event.type == sf::Event::Closed)
-                preview.window.close();
-        }
-
-        for (int j = 0; j < preview.image_height; j++) {
-            for (int i = 0; i < preview.image_width; i++) {
-                Color pixel_color(0,0,0);
-                for (int sample = 0; sample < samples_per_pixel; sample++) {
-                    Ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, max_depth, world);
-                }
-                pixel_color *= pixel_samples_scale;
-                preview.image.setPixel(i, j, sf::Color(
-                    static_cast<sf::Uint8>(255.999 * pixel_color.x()),
-                    static_cast<sf::Uint8>(255.999 * pixel_color.y()),
-                    static_cast<sf::Uint8>(255.999 * pixel_color.z())
-                ));
+    for (int j = 0; j < preview.image_height; j++) {
+        for (int i = 0; i < preview.image_width; i++) {
+            Color pixel_color(0,0,0);
+            for (int sample = 0; sample < 40; sample++) {
+                Ray r = get_ray(i, j);
+                pixel_color += ray_color(r, max_depth, world);
             }
+            pixel_color *= pixel_samples_scale;
+            preview.image.setPixel(i, j, sf::Color(
+                static_cast<sf::Uint8>(255.999 * pixel_color.x()),
+                static_cast<sf::Uint8>(255.999 * pixel_color.y()),
+                static_cast<sf::Uint8>(255.999 * pixel_color.z())
+            ));
         }
-        preview.texture.update(preview.image);
-        preview.window.clear();
-        preview.window.draw(preview.sprite);
-        preview.window.display();
     }
+    preview.display();
 }
 
 
