@@ -13,7 +13,6 @@
     #include <cstdlib>
     #include <memory>
     #include <libconfig.h++>
-    // #include <SFML/Graphics.hpp>
 
 using std::fabs;
 using std::make_shared;

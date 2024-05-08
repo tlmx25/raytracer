@@ -48,10 +48,42 @@ Camera::~Camera()
 {
 }
 
+void Camera::display_preview(Preview &preview, const IPrimitive& world)
+{
+    while (preview.window.isOpen()) {
+        while (preview.window.pollEvent(preview.event)) {
+            if (preview.event.type == sf::Event::Closed)
+                preview.window.close();
+        }
+
+        for (int j = 0; j < preview.image_height; j++) {
+            for (int i = 0; i < preview.image_width; i++) {
+                Color pixel_color(0,0,0);
+                for (int sample = 0; sample < samples_per_pixel; sample++) {
+                    Ray r = get_ray(i, j);
+                    pixel_color += ray_color(r, max_depth, world);
+                }
+                pixel_color *= pixel_samples_scale;
+                preview.image.setPixel(i, j, sf::Color(
+                    static_cast<sf::Uint8>(255.999 * pixel_color.x()),
+                    static_cast<sf::Uint8>(255.999 * pixel_color.y()),
+                    static_cast<sf::Uint8>(255.999 * pixel_color.z())
+                ));
+            }
+        }
+        preview.texture.update(preview.image);
+        preview.window.clear();
+        preview.window.draw(preview.sprite);
+        preview.window.display();
+    }
+}
+
+
 void Camera::render(const IPrimitive& world)
 {    
     initialize();
-    preview(world);
+    Preview preview(image_width, image_height);
+    display_preview(preview, world);
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
@@ -65,45 +97,6 @@ void Camera::render(const IPrimitive& world)
         }
     }
     std::clog << "\rDone.                 \n";
-}
-
-void Camera::preview(const IPrimitive& world)
-{
-    // initialize();
-    init_preview();
-
-    while (window.isOpen()) {
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-        for (int j = 0; j < image_height; j++) {
-            for (int i = 0; i < image_width; i++) {
-                Color pixel_color(0,0,0);
-                for (int sample = 0; sample < samples_per_pixel; sample++) {
-                    Ray r = get_ray(i, j);
-                    pixel_color += ray_color(r, max_depth, world);
-                }
-                sf::Color sfml_color(
-                    static_cast<sf::Uint8>(255.999 * pixel_color.x()),
-                    static_cast<sf::Uint8>(255.999 * pixel_color.y()),
-                    static_cast<sf::Uint8>(255.999 * pixel_color.z())
-                );
-                image.setPixel(i, j, sfml_color);
-            }
-        }
-        texture.loadFromImage(image);
-        sprite.setTexture(texture);
-        window.draw(sprite);
-        window.display();
-    }
-}
-
-void Camera::init_preview()
-{
-    window.create(sf::VideoMode(image_width / 4, image_height / 4), "Raytracer");
-    image.create(image_width, image_height, sf::Color::Black);
-    texture.loadFromImage(image);
 }
 
 void Camera::initialize() {
