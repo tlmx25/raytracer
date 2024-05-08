@@ -8,6 +8,7 @@
 #include "Camera.hpp"
 #include <chrono>
 #include <sstream>
+#include <fstream>
 
 Camera::Camera()
 {
@@ -42,6 +43,9 @@ void Camera::render_section(const IPrimitive& world, const Camera& cam, std::vec
     Color pixel_color(0,0,0);
     Ray r;
 
+    std::string tmp_filename = "tmp_" + std::to_string(id) + ".ray";
+    std::ofstream out (tmp_filename, std::ios::out);
+
     for (int j = startY; j < endY; j++) {
         for (int i = startX; i < endX; i++) {
             pixel_color.reset();
@@ -49,9 +53,10 @@ void Camera::render_section(const IPrimitive& world, const Camera& cam, std::vec
                 r = cam.get_ray(i, j);
                 pixel_color += cam.ray_color(r, max_depth, world);
             }
-            write_color_multithread(buffer[j], pixel_samples_scale * pixel_color);
+            write_color(out, pixel_samples_scale * pixel_color);
         }
     }
+    out.close();
     std::cerr << "Thread " << id << " done" << std::endl;
 }
 
@@ -65,27 +70,34 @@ void Camera::renderMultithread(const IPrimitive& world)
     initialize();
     std::stringstream ss;
     std::vector<std::string> buffer(image_height);
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
-    num_threads = 3;
+    std::ofstream out ("Rendu.ppm", std::ios::out);
+    out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+    num_threads = 2;
     int sectionHeight = image_height / num_threads;
-    for (int i = 0; i < image_height; i++) {
-        buffer[i].reserve(image_width * 13);
-    }
-    std::cerr << "height: " << image_height << " sectionHeight: " << sectionHeight << " num_threads: " << num_threads << "\n";
+
+    std::cout << "height: " << image_height << " sectionHeight: " << sectionHeight << " num_threads: " << num_threads << "\n";
     for (unsigned int i = 0; i < num_threads; i++) {
         int startY = i * sectionHeight;
         int endY = (i + 1) * sectionHeight;
         if (i == num_threads - 1)
             endY = image_height;
-        std::cerr << "Thread " << i << " : " << startY << " -> " << endY << std::endl;
+        std::cout << "Thread " << i << " : " << startY << " -> " << endY << std::endl;
         threads.emplace_back(&Camera::render_section, this, std::ref(world), *this, std::ref(buffer), 0, image_width, startY, endY, i);
     }
-    for (auto& thread : threads)
+    for (auto& thread : threads) {
         thread.join();
-    for (int i = 0; i < image_height; i++) {
-        std::cout << buffer[i];
     }
+    for (int i = 0; i < num_threads; i++) {
+        std::ofstream in ("tmp_" + std::to_string(i) + ".ray", std::ios::in);
+        out << in.rdbuf();
+        in.close();
+    }
+    out.close();
     std::clog << "\rDone.                 \n";
+    for (int i = 0; i < num_threads; i++) {
+        std::string tmp_filename = "tmp_" + std::to_string(i) + ".ray";
+        remove(tmp_filename.c_str());
+    }
 }
 
 void Camera::initialize() {
@@ -117,20 +129,20 @@ Ray Camera::get_ray(int i, int j) const {
     auto ray_origin = center;
     auto ray_direction = pixel_sample - ray_origin;
 
-    return Ray(ray_origin, ray_direction);
+    return {ray_origin, ray_direction};
 }
 
 Vec3 Camera::sample_square() const
 {
-    return Vec3(Utils::random_double() - 0.5, Utils::random_double() - 0.5, 0);
+    return {Utils::random_double() - 0.5, Utils::random_double() - 0.5, 0};
 }
 
 Color Camera::ray_color(const Ray& r, int depth, const IPrimitive& world) const
 {
     Ray scattered;
     HitRecord rec;
-    Color attenuation;
-    Vec3 unit_direction;
+    static Color attenuation;
+    static Vec3 unit_direction;
 
     if (depth <= 0)
         return {0,0,0};
