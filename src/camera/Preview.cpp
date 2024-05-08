@@ -14,6 +14,11 @@ Preview::Preview(int image_width, int image_height)
     init();
 }
 
+Preview::~Preview()
+{
+    this->window.close();
+}
+
 void Preview::init()
 {
     window.create(sf::VideoMode(image_width, image_height), "Raytracer");

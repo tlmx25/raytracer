@@ -13,7 +13,7 @@
 class Preview {
     public:
         Preview(int image_width, int image_height);
-        ~Preview() = default;
+        ~Preview();
         void init();
         double image_width;
         double image_height;
