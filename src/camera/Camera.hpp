@@ -11,6 +11,7 @@
     #include "Color.hpp"
     #include "Utils.hpp"
     #include "IMaterial.hpp"
+    #include "Preview.hpp"
 
 class Camera {
     public:
@@ -20,6 +21,7 @@ class Camera {
     public:
         void render(const IPrimitive& world);
         void initialize();
+        void display_preview(Preview &preview, const IPrimitive& world);
         Ray get_ray(int i, int j) const;
         Vec3 sample_square() const;
         Color ray_color(const Ray& r, int depth, const IPrimitive& world) const;
@@ -37,9 +39,9 @@ class Camera {
 
         double defocus_angle = 0;
         double focus_dist = 10;
-    private:
-        int image_height;
         double pixel_samples_scale;
+        int image_height;
+    private:
         Point3 center;
         Point3 pixel00_loc;
         Vec3 pixel_delta_u;

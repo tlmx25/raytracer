@@ -48,9 +48,32 @@ Camera::~Camera()
 {
 }
 
+void Camera::display_preview(Preview &preview, const IPrimitive& world)
+{
+    for (int j = 0; j < preview.image_height; j++) {
+        for (int i = 0; i < preview.image_width; i++) {
+            Color pixel_color(0,0,0);
+            for (int sample = 0; sample < 40; sample++) {
+                Ray r = get_ray(i, j);
+                pixel_color += ray_color(r, max_depth, world);
+            }
+            pixel_color *= pixel_samples_scale;
+            preview.image.setPixel(i, j, sf::Color(
+                static_cast<sf::Uint8>(255.999 * pixel_color.x()),
+                static_cast<sf::Uint8>(255.999 * pixel_color.y()),
+                static_cast<sf::Uint8>(255.999 * pixel_color.z())
+            ));
+        }
+    }
+    preview.display();
+}
+
+
 void Camera::render(const IPrimitive& world)
 {    
     initialize();
+    Preview preview(image_width, image_height);
+    display_preview(preview, world);
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
