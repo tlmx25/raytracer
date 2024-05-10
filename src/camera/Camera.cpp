@@ -142,17 +142,19 @@ Color Camera::ray_color(const Ray& r, int depth, const IPrimitive& world) const
         return Color(0,0,0);
     HitRecord rec;
 
-    if (world.hit(r, Interval(0.001, infinity), rec)) {
-        Ray scattered;
-        Color attenuation;
-        if (rec.mat->scatter(r, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, depth-1, world);
-        return Color(0,0,0);
-    }
+    if (!world.hit(r, Interval(0.001, infinity), rec))
+        return background;
 
-    Vec3 unit_direction = unit_vector(r.direction());
-    auto a = 0.5*(unit_direction.y() + 1.0);
-    return (1.0-a)*Color(1.0, 1.0, 1.0) + a*Color(0.5, 0.7, 1.0);
+    Ray scattered;
+    Color attenuation;
+    Color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
+
+    if (!rec.mat->scatter(r, rec, attenuation, scattered))
+        return color_from_emission;
+
+    Color color_from_scatter = attenuation * ray_color(scattered, depth-1, world);
+
+    return color_from_emission + color_from_scatter;
 }
 
 Point3 Camera::defocus_disk_sample() const
