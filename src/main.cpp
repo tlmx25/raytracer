@@ -7,7 +7,6 @@
 
 #include "Camera.hpp"
 #include "PrimList.hpp"
-// #include "material.hpp"
 #include <memory>
 #include "builder/builder.hpp"
 
