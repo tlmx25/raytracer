@@ -62,6 +62,7 @@ void Camera::display_preview(Preview &preview, const IPrimitive& world)
                 pixel_color += ray_color(r, max_depth, world);
             }
             pixel_color *= pixel_samples_scale;
+            pixel_color *= 4;
             preview.image.setPixel(i, j, sf::Color(
                 static_cast<sf::Uint8>(255.999 * pixel_color.x()),
                 static_cast<sf::Uint8>(255.999 * pixel_color.y()),
@@ -69,6 +70,7 @@ void Camera::display_preview(Preview &preview, const IPrimitive& world)
             ));
         }
     }
+    std::cout << "Preview done" << std::endl;
     preview.display();
 }
 
