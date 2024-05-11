@@ -41,6 +41,8 @@ Camera::Camera(const libconfig::Setting &settings)
         samples_per_pixel = Utils::settings_get_double(settings, "samples_per_pixel");
     if (settings.exists("max_depth"))
         max_depth= Utils::settings_get_int(settings, "max_depth");
+    if (settings.exists("background"))
+        background = Vec3::parseVec3(settings["background"]);
     initialize();
 }
 

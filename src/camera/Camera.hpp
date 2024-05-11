@@ -49,5 +49,5 @@ class Camera {
         Vec3 u, v, w;
         Vec3 defocus_disk_u;
         Vec3 defocus_disk_v;
-        Color background;
+        Color background = Color(0,0,0);
 };
