@@ -20,9 +20,8 @@ Diffuselight::Diffuselight(const libconfig::Setting &settings)
     }
 }
 
-Diffuselight::~Diffuselight()
-{
-}
+Diffuselight::~Diffuselight() = default;
+
 
 extern "C" IMaterial *entryPoint(const libconfig::Setting &settings)
 {

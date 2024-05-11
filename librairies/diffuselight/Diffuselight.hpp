@@ -9,13 +9,14 @@
 
   #include <libconfig.h++>
   #include "Vec3.hpp"
-  #include "CheckerTex.hpp"
+  #include "../common/CheckerTex.hpp"
   #include "IMaterial.hpp"
   #define UNUSED __attribute__((unused))
 
 class Diffuselight : public IMaterial {
   public:
     Diffuselight(const libconfig::Setting &settings);
+    ~Diffuselight();
 
     Color emitted(double u, double v, const Point3& p) const {
         return tex->value(u, v, p);
