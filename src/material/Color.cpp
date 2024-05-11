@@ -13,38 +13,61 @@ void write_color(std::ostream& out, const Color& pixel_color)
     auto g = pixel_color.y();
     auto b = pixel_color.z();
 
-    // Apply a linear to gamma transform for gamma 2
     r = linear_to_gamma(r);
     g = linear_to_gamma(g);
     b = linear_to_gamma(b);
 
-    // Translate the [0,1] component values to the byte range [0,255].
     static const Interval intensity(0.000, 0.999);
-    int rbyte = int(256 * intensity.clamp(r));
-    int gbyte = int(256 * intensity.clamp(g));
-    int bbyte = int(256 * intensity.clamp(b));
+    char rbyte = int(256 * intensity.clamp(r));
+    char gbyte = int(256 * intensity.clamp(g));
+    char bbyte = int(256 * intensity.clamp(b));
 
-    // Write out the pixel color components.
-    out << rbyte << ' ' << gbyte << ' ' << bbyte << std::endl;
+    out << rbyte << gbyte <<  bbyte;
+//    out << rbyte << ' ' << gbyte << ' ' << bbyte << std::endl;
 }
 
-void write_color_multithread(std::string &buffer, const Color& pixel_color)
+void write_color_multithread(std::string &buffer, const Color &pixel_color, int i)
 {
     auto r = pixel_color.x();
     auto g = pixel_color.y();
     auto b = pixel_color.z();
 
-    // Apply a linear to gamma transform for gamma 2
     r = linear_to_gamma(r);
     g = linear_to_gamma(g);
     b = linear_to_gamma(b);
 
-    // Translate the [0,1] component values to the byte range [0,255].
     static const Interval intensity(0.000, 0.999);
-    int rbyte = int(256 * intensity.clamp(r));
-    int gbyte = int(256 * intensity.clamp(g));
-    int bbyte = int(256 * intensity.clamp(b));
+//    char rbyte = char(256 * intensity.clamp(r));
+//    char gbyte = char(256 * intensity.clamp(g));
+//    char bbyte = char(256 * intensity.clamp(b));
+    (void)i;
 
-    // Write out the pixel color components.
-    buffer += std::to_string(rbyte) + ' ' + std::to_string(gbyte) + ' ' + std::to_string(bbyte) + '\n';
+//    buffer += std::to_string(rbyte) + ' ' + std::to_string(gbyte) + ' ' + std::to_string(bbyte) + '\n';
+    buffer += char(256 * intensity.clamp(r));
+    buffer += char(256 * intensity.clamp(g));
+    buffer += char(256 * intensity.clamp(b));
+}
+
+void write_color(std::ostream& out, const Pixel& pixel_color)
+{
+//    std::cout << (int)pixel_color.r << (int)pixel_color.g << (int)pixel_color.b << std::endl;
+    out << pixel_color.r << pixel_color.g << pixel_color.b;
+}
+
+Pixel color_to_pixel(const Color& pixel_color)
+{
+    auto r = pixel_color.x();
+    auto g = pixel_color.y();
+    auto b = pixel_color.z();
+
+    r = linear_to_gamma(r);
+    g = linear_to_gamma(g);
+    b = linear_to_gamma(b);
+
+    static const Interval intensity(0.000, 0.999);
+    unsigned  char rbyte = char(256 * intensity.clamp(r));
+    unsigned  char gbyte = char(256 * intensity.clamp(g));
+    unsigned  char bbyte = char(256 * intensity.clamp(b));
+
+    return Pixel{rbyte, gbyte, bbyte};
 }

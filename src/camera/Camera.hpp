@@ -20,7 +20,8 @@ class Camera {
     public:
         void render(const IPrimitive& world);
         void renderMultithread(const IPrimitive& world);
-        void render_section(const IPrimitive& world, const Camera& cam, std::vector<std::string> &buffer, int startX, int endX, int startY, int endY, int id);
+        void render_section(const IPrimitive& world, const Camera& cam, std::vector<std::vector<Pixel>> &buffer, int startX, int endX, int startY, int endY, int id);
+//    void render_section(const IPrimitive& world, const Camera& cam, std::atomic<Pixel>& buffer, int startX, int endX, int startY, int endY, int id);
         void initialize();
         Ray get_ray(int i, int j) const;
         Vec3 sample_square() const;

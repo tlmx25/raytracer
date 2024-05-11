@@ -6,9 +6,10 @@
 */
 
 #include "Camera.hpp"
-#include <chrono>
 #include <sstream>
 #include <fstream>
+#include <mutex>
+#include <atomic>
 
 Camera::Camera()
 {
@@ -54,8 +55,10 @@ Camera::~Camera()
 void Camera::render(const IPrimitive& world)
 {
     initialize();
-    std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
     Color pixel_color(0,0,0);
+    std::ofstream out ("Rendu.ppm", std::ios::out);
+    out << "P6\n" << image_width << ' ' << image_height << "\n255\n";
+
 
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
@@ -65,50 +68,51 @@ void Camera::render(const IPrimitive& world)
                 Ray r = get_ray(i, j);
                 pixel_color += ray_color(r, max_depth, world);
             }
-            write_color(std::cout, pixel_samples_scale * pixel_color);
+            write_color(out, pixel_samples_scale * pixel_color);
         }
     }
+    out.close();
     std::clog << "\rDone.                 \n";
 }
 
-void Camera::render_section(const IPrimitive& world, const Camera& cam, std::vector<std::string> &buffer, int startX, int endX, int startY, int endY, int id)
+
+std::mutex render_mutex;
+
+void Camera::render_section(const IPrimitive& world, const Camera& cam, std::vector<std::vector<Pixel>>& buffer, int startX, int endX, int startY, int endY, int id)
 {
-    Color pixel_color(0,0,0);
     Ray r;
-
-    std::string tmp_filename = "tmp_" + std::to_string(id) + ".ray";
-    std::ofstream out (tmp_filename, std::ios::out);
-
+    Color pixel_color(0, 0, 0);
+    Color tmp_pixel;
     for (int j = startY; j < endY; j++) {
+        buffer[j].resize(image_width);
         for (int i = startX; i < endX; i++) {
             pixel_color.reset();
             for (int sample = 0; sample < samples_per_pixel; sample++) {
                 r = cam.get_ray(i, j);
                 pixel_color += cam.ray_color(r, max_depth, world);
             }
-            write_color(out, pixel_samples_scale * pixel_color);
+            std::lock_guard<std::mutex> guard(render_mutex);
+            buffer[j][i] = color_to_pixel(pixel_samples_scale * pixel_color);
         }
     }
-    out.close();
-    std::cerr << "Thread " << id << " done" << std::endl;
+    std::cout << "Thread " << id << " done" << std::endl;
 }
 
 void Camera::renderMultithread(const IPrimitive& world)
 {
-    std::vector<std::thread> threads;
     unsigned int num_threads = std::thread::hardware_concurrency();
-
     if (num_threads == 0)
         num_threads = 8;
+
     initialize();
-    std::stringstream ss;
-    std::vector<std::string> buffer(image_height);
-    std::ofstream out ("Rendu.ppm", std::ios::out);
-    out << "P3\n" << image_width << ' ' << image_height << "\n255\n";
+
+    std::vector<std::thread> threads;
+    std::vector<std::vector<Pixel>> buffer(image_height);
     num_threads = 2;
     int sectionHeight = image_height / num_threads;
 
-    std::cout << "height: " << image_height << " sectionHeight: " << sectionHeight << " num_threads: " << num_threads << "\n";
+    std::cout << "height: " << image_height << " sectionHeight: " << sectionHeight << " num_threads: " << num_threads << std::endl;
+
     for (unsigned int i = 0; i < num_threads; i++) {
         int startY = i * sectionHeight;
         int endY = (i + 1) * sectionHeight;
@@ -117,20 +121,20 @@ void Camera::renderMultithread(const IPrimitive& world)
         std::cout << "Thread " << i << " : " << startY << " -> " << endY << std::endl;
         threads.emplace_back(&Camera::render_section, this, std::ref(world), *this, std::ref(buffer), 0, image_width, startY, endY, i);
     }
+
     for (auto& thread : threads) {
         thread.join();
     }
-    for (int i = 0; i < num_threads; i++) {
-        std::ofstream in ("tmp_" + std::to_string(i) + ".ray", std::ios::in);
-        out << in.rdbuf();
-        in.close();
+
+    std::ofstream out("Rendu.ppm", std::ios::out | std::ios::binary);
+    out << "P6\n" << image_width << " " << image_height << std::endl <<"255" << std::endl;
+    for (const auto& color : buffer) {
+        for (const auto& pixel : color)
+            write_color(out, pixel);
     }
     out.close();
-    std::clog << "\rDone.                 \n";
-    for (int i = 0; i < num_threads; i++) {
-        std::string tmp_filename = "tmp_" + std::to_string(i) + ".ray";
-        remove(tmp_filename.c_str());
-    }
+
+    std::clog << "\rDone." << std::endl;
 }
 
 void Camera::initialize() {
