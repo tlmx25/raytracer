@@ -106,7 +106,6 @@ void Vec3::reset()
     this->e[1] = 0;
     this->e[2] = 0;
 }
-
 double Vec3::getValue(const libconfig::Setting &setting, std::string name)
 {
     double value_double = 0.0;

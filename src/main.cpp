@@ -9,6 +9,7 @@
 #include "PrimList.hpp"
 #include <memory>
 #include "builder/builder.hpp"
+
 static void print_usage()
 {
     std::cout << "USAGE: ./raytracer [config_file]" << std::endl;
@@ -35,7 +36,7 @@ int main(int ac, char **av)
         auto materials = builder.getMaterials();
 
         auto primitives = builder.getPrimitives(materials);
-        cam.renderMultithread(primitives);
+        cam.render(primitives);
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;

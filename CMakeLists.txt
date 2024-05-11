@@ -12,6 +12,8 @@ set(CMAKE_CXX_LINK_FLAGS "${CMAKE_CXX_LINK_FLAGS} -latomic")
 #SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall -Wextra -g -fsanitize=address,leak,undefined")
 #SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,leak,undefined")
 
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+
 include_directories(src)
 include_directories(src/maths)
 include_directories(src/material)
@@ -30,6 +32,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/material/Color.cpp
         src/DlLoader/CLibEncapsulation.cpp
         src/camera/Camera.cpp
+        src/camera/Preview.cpp
         src/list_object/HitRecord.cpp
         src/primitive/PrimList.cpp
         src/material/ColorMat.cpp
@@ -37,6 +40,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
 target_link_libraries(${PROJECT_NAME} atomic)
+target_link_libraries(${PROJECT_NAME} sfml-graphics sfml-window sfml-system)
 
 #add_subdirectory(librairies/template)
 add_subdirectory(librairies/lambertian)
