@@ -5,10 +5,40 @@
 ** main
 */
 
-#include <iostream>
+#include "Camera.hpp"
+#include "PrimList.hpp"
+#include <memory>
+#include "builder/builder.hpp"
 
-int main(void)
+static void print_usage()
 {
-    std::cout << "Hello World" << std::endl;
-    return 0;
+    std::cout << "USAGE: ./raytracer [config_file]" << std::endl;
+}
+
+int main(int ac, char **av)
+{
+
+    if (ac != 2) {
+        print_usage();
+        return 84;
+    }
+    if (std::string(av[1]) == "-h") {
+        print_usage();
+        return 0;
+    }
+    try {
+        PrimList world;
+
+        Camera cam;
+
+        Builder builder(av[1]);
+        cam = builder.getCamera();
+        auto materials = builder.getMaterials();
+
+        auto primitives = builder.getPrimitives(materials);
+        cam.render(primitives);
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
 }
