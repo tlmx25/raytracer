@@ -9,7 +9,7 @@
 
     #include "APrimitive.hpp"
 
-class Trans {
+class Trans : public APrimitive {
   public:
     Trans(shared_ptr<IPrimitive> object, const Vec3& offset) : object(object), offset(offset) {};
     bool hit(const Ray& r, Interval ray_t, HitRecord& rec) const;

@@ -27,6 +27,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/maths/Ray.cpp
         src/maths/Vec3.cpp
         src/maths/Trans.cpp
+        src/maths/Rotate.cpp
         src/material/Color.cpp
         src/DlLoader/CLibEncapsulation.cpp
         src/camera/Camera.cpp
