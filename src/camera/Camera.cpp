@@ -72,8 +72,7 @@ void Camera::display_preview(Preview &preview, const IPrimitive& world)
 
 
 void Camera::render(const IPrimitive& world)
-{    
-    initialize();
+{
     Preview preview(image_width, image_height);
     display_preview(preview, world);
     std::cout << "P3\n" << image_width << ' ' << image_height << "\n255\n";
