@@ -135,3 +135,10 @@ Camera Builder::getCamera()
         throw BuilderError("Builder: error on reading camera : " + std::string(e.what()));
     }
 }
+
+Settings Builder::getSettings()
+{
+    const libconfig::Setting &root = _cfg.getRoot();
+
+    return Settings(root);
+}

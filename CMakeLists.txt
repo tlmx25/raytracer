@@ -21,6 +21,7 @@ include_directories(src/camera)
 include_directories(src/primitive)
 include_directories(src/list_object)
 include_directories(src/DlLoader)
+include_directories(src/settings)
 
 
 add_executable(${PROJECT_NAME} src/main.cpp
@@ -36,6 +37,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/list_object/HitRecord.cpp
         src/primitive/PrimList.cpp
         src/material/ColorMat.cpp
+        src/settings/Settings.cpp
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
