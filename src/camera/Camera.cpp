@@ -232,9 +232,6 @@ Color Camera::ray_color(const Ray& r, int depth, const IPrimitive& world) const
         return {0,0,0};
     if (!world.hit(r, Interval(0.001, infinity), rec))
         return background;
-
-    Ray scattered;
-    Color attenuation;
     Color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
 
     if (!rec.mat->scatter(r, rec, attenuation, scattered))

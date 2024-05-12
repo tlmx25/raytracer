@@ -22,7 +22,9 @@ class Diffuselight : public IMaterial {
         return tex->value(u, v, p);
     }
 
-    bool scatter(UNUSED const Ray& r_in,UNUSED const HitRecord& rec,UNUSED Color& attenuation,UNUSED Ray& scattered) const override {};
+    bool scatter(UNUSED const Ray& r_in,UNUSED const HitRecord& rec,UNUSED Color& attenuation,UNUSED Ray& scattered) const override {
+      return false;
+    };
 
   private:
     Color albedo;
