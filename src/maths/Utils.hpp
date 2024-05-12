@@ -12,6 +12,8 @@
     #include <limits>
     #include <cstdlib>
     #include <memory>
+    #include <vector>
+    #include <thread>
     #include <libconfig.h++>
 
 using std::fabs;

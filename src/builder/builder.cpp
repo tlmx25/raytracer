@@ -148,3 +148,10 @@ void Builder::setTransform(const libconfig::Setting &setting, std::shared_ptr<AP
         primitive = make_shared<Rotate>(primitive, Utils::settings_get_double(setting, "rotation"));
     }
 }
+
+Settings Builder::getSettings()
+{
+    const libconfig::Setting &root = _cfg.getRoot();
+
+    return Settings(root);
+}

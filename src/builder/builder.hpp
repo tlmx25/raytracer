@@ -17,6 +17,7 @@
 #include "ColorMat.hpp"
 #include "APrimitive.hpp"
 #include "Camera.hpp"
+#include "Settings.hpp"
 
 class Builder {
     public:
@@ -26,6 +27,7 @@ class Builder {
         std::map<std::string, shared_ptr<IMaterial>> getMaterials();
         PrimList getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &materials);
         Camera getCamera();
+        Settings getSettings();
 
     template<class Type>
     Type getObjectFromLib(std::string &name, const libconfig::Setting &settings)

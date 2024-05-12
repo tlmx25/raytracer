@@ -7,7 +7,6 @@
 
 #include "Camera.hpp"
 #include "PrimList.hpp"
-// #include "material.hpp"
 #include <memory>
 #include "builder/builder.hpp"
 
@@ -31,13 +30,13 @@ int main(int ac, char **av)
         PrimList world;
 
         Camera cam;
-
         Builder builder(av[1]);
+        Settings settings = builder.getSettings();
         cam = builder.getCamera();
         auto materials = builder.getMaterials();
 
         auto primitives = builder.getPrimitives(materials);
-        cam.render(primitives);
+        cam.render(primitives, settings);
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return 84;
