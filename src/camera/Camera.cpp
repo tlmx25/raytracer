@@ -45,6 +45,8 @@ Camera::Camera(const libconfig::Setting &settings)
         samples_per_pixel = Utils::settings_get_double(settings, "samples_per_pixel");
     if (settings.exists("max_depth"))
         max_depth= Utils::settings_get_int(settings, "max_depth");
+    if (settings.exists("background"))
+        background = Vec3::parseVec3(settings["background"]);
     initialize();
 }
 
@@ -52,7 +54,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::display_preview(Preview &preview, const IPrimitive& world)
+bool Camera::display_preview(Preview &preview, const IPrimitive& world)
 {
     for (int j = 0; j < preview.image_height; j++) {
         for (int i = 0; i < preview.image_width; i++) {
@@ -62,6 +64,7 @@ void Camera::display_preview(Preview &preview, const IPrimitive& world)
                 pixel_color += ray_color(r, max_depth, world);
             }
             pixel_color *= pixel_samples_scale;
+            pixel_color *= 4;
             preview.image.setPixel(i, j, sf::Color(
                 static_cast<sf::Uint8>(255.999 * pixel_color.x()),
                 static_cast<sf::Uint8>(255.999 * pixel_color.y()),
@@ -69,19 +72,29 @@ void Camera::display_preview(Preview &preview, const IPrimitive& world)
             ));
         }
     }
-    preview.display();
+    std::cout << "Preview done" << std::endl;
+    return preview.display();
 }
 
 
-void Camera::render(const IPrimitive& world)
+void Camera::render(const IPrimitive &world, Settings &settings)
+
 {
-    initialize();
+    Preview preview(image_width, image_height);
+    if (!display_preview(preview, world))
+        return;
+    if (settings.getMultithreading())
+        renderMultithread(world, settings);
+    else
+        renderPPM(world, settings);
+}
+
+void Camera::renderPPM(const IPrimitive &world, Settings &settings)
+{
     Color pixel_color(0,0,0);
-    std::ofstream out ("Rendu.ppm", std::ios::out);
+    std::ofstream out (settings.getOutputPath(), std::ios::out);
     out << "P6\n" << image_width << ' ' << image_height << "\n255\n";
 
-    Preview preview(image_width, image_height);
-    display_preview(preview, world);
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
         for (int i = 0; i < image_width; i++) {
@@ -120,18 +133,20 @@ void Camera::render_section(const IPrimitive& world, const Camera& cam, std::vec
     std::cout << "Thread " << id << " done" << std::endl;
 }
 
-void Camera::renderMultithread(const IPrimitive& world)
+void Camera::renderMultithread(const IPrimitive &world, Settings &settings)
 {
     unsigned int num_threads = std::thread::hardware_concurrency();
     if (num_threads == 0)
         num_threads = 8;
 
-    initialize();
 
     std::vector<std::thread> threads;
     std::vector<std::vector<Pixel>> buffer(image_height);
-    num_threads = 2;
     int sectionHeight = image_height / num_threads;
+    if (sectionHeight < 50) {
+        sectionHeight = 50;
+        num_threads = image_height / sectionHeight;
+    }
 
     std::cout << "height: " << image_height << " sectionHeight: " << sectionHeight << " num_threads: " << num_threads << std::endl;
 
@@ -148,7 +163,7 @@ void Camera::renderMultithread(const IPrimitive& world)
         thread.join();
     }
 
-    std::ofstream out("Rendu.ppm", std::ios::out | std::ios::binary);
+    std::ofstream out(settings.getOutputPath(), std::ios::out | std::ios::binary);
     out << "P6\n" << image_width << " " << image_height << std::endl <<"255" << std::endl;
     for (const auto& color : buffer) {
         for (const auto& pixel : color)
@@ -215,17 +230,16 @@ Color Camera::ray_color(const Ray& r, int depth, const IPrimitive& world) const
 
     if (depth <= 0)
         return {0,0,0};
+    if (!world.hit(r, Interval(0.001, infinity), rec))
+        return background;
+    Color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
 
-    if (world.hit(r, Interval(0.001, infinity), rec)) {
-        attenuation.reset();
-        if (rec.mat->scatter(r, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, depth-1, world);
-        return {0,0,0};
-    }
+    if (!rec.mat->scatter(r, rec, attenuation, scattered))
+        return color_from_emission;
 
-    unit_direction = unit_vector(r.direction());
-    auto a = 0.5*(unit_direction.y() + 1.0);
-    return (1.0-a)*Color(1.0, 1.0, 1.0) + a*Color(0.5, 0.7, 1.0);
+    Color color_from_scatter = attenuation * ray_color(scattered, depth-1, world);
+
+    return color_from_emission + color_from_scatter;
 }
 
 Point3 Camera::defocus_disk_sample() const

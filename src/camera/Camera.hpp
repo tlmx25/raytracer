@@ -12,6 +12,7 @@
     #include "Utils.hpp"
     #include "IMaterial.hpp"
     #include "Preview.hpp"
+#include "Settings.hpp"
 
 class Camera {
     public:
@@ -19,12 +20,12 @@ class Camera {
         explicit Camera(const libconfig::Setting &settings);
         ~Camera();
     public:
-        void render(const IPrimitive& world);
-        void renderMultithread(const IPrimitive& world);
+        void render(const IPrimitive &world, Settings &settings);
+        void renderPPM(const IPrimitive& world, Settings &settings);
+        void renderMultithread(const IPrimitive &world, Settings &settings);
         void render_section(const IPrimitive& world, const Camera& cam, std::vector<std::vector<Pixel>> &buffer, int startX, int endX, int startY, int endY, int id);
-//    void render_section(const IPrimitive& world, const Camera& cam, std::atomic<Pixel>& buffer, int startX, int endX, int startY, int endY, int id);
         void initialize();
-        void display_preview(Preview &preview, const IPrimitive& world);
+        bool display_preview(Preview &preview, const IPrimitive& world);
         Ray get_ray(int i, int j) const;
         Vec3 sample_square() const;
         Color ray_color(const Ray& r, int depth, const IPrimitive& world) const;
@@ -53,4 +54,5 @@ class Camera {
         Vec3 u, v, w;
         Vec3 defocus_disk_u;
         Vec3 defocus_disk_v;
+        Color background = Color(0.70,0.80,1);
 };

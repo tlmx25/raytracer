@@ -21,6 +21,7 @@ include_directories(src/camera)
 include_directories(src/primitive)
 include_directories(src/list_object)
 include_directories(src/DlLoader)
+include_directories(src/settings)
 
 
 add_executable(${PROJECT_NAME} src/main.cpp
@@ -29,6 +30,8 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/maths/Utils.cpp
         src/maths/Ray.cpp
         src/maths/Vec3.cpp
+        src/maths/Trans.cpp
+        src/maths/Rotate.cpp
         src/material/Color.cpp
         src/DlLoader/CLibEncapsulation.cpp
         src/camera/Camera.cpp
@@ -36,6 +39,7 @@ add_executable(${PROJECT_NAME} src/main.cpp
         src/list_object/HitRecord.cpp
         src/primitive/PrimList.cpp
         src/material/ColorMat.cpp
+        src/settings/Settings.cpp
 )
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} config++)
@@ -50,6 +54,7 @@ add_subdirectory(librairies/dialectric)
 add_subdirectory(librairies/plan)
 add_subdirectory(librairies/cylinder)
 add_subdirectory(librairies/cone)
+add_subdirectory(librairies/diffuselight)
 
 set_directory_properties(PROPERTIES ADDITIONAL_MAKE_CLEAN_FILES "lib")
 

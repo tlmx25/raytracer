@@ -15,7 +15,7 @@ class Preview {
         Preview(int image_width, int image_height);
         ~Preview();
         void init();
-        void display();
+        bool display();
         double image_width;
         double image_height;
         sf::RenderWindow window;
