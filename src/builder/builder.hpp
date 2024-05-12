@@ -49,6 +49,7 @@ class Builder {
         std::string pluginPath = "./plugins/";
         void setMaterials(std::map<std::string, shared_ptr<IMaterial>> &materials, std::shared_ptr<APrimitive> primitive, const libconfig::Setting &material);
         void setColor(const libconfig::Setting &setting, std::shared_ptr<APrimitive> &primitive);
+        void setTransform(const libconfig::Setting &setting, std::shared_ptr<APrimitive> &primitive);
 
 
     public:

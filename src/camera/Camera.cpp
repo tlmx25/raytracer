@@ -45,6 +45,8 @@ Camera::Camera(const libconfig::Setting &settings)
         samples_per_pixel = Utils::settings_get_double(settings, "samples_per_pixel");
     if (settings.exists("max_depth"))
         max_depth= Utils::settings_get_int(settings, "max_depth");
+    if (settings.exists("background"))
+        background = Vec3::parseVec3(settings["background"]);
     initialize();
 }
 
@@ -76,6 +78,7 @@ bool Camera::display_preview(Preview &preview, const IPrimitive& world)
 
 
 void Camera::render(const IPrimitive &world, Settings &settings)
+
 {
     Preview preview(image_width, image_height);
     if (!display_preview(preview, world))
@@ -227,17 +230,19 @@ Color Camera::ray_color(const Ray& r, int depth, const IPrimitive& world) const
 
     if (depth <= 0)
         return {0,0,0};
+    if (!world.hit(r, Interval(0.001, infinity), rec))
+        return background;
 
-    if (world.hit(r, Interval(0.001, infinity), rec)) {
-        attenuation.reset();
-        if (rec.mat->scatter(r, rec, attenuation, scattered))
-            return attenuation * ray_color(scattered, depth-1, world);
-        return {0,0,0};
-    }
+    Ray scattered;
+    Color attenuation;
+    Color color_from_emission = rec.mat->emitted(rec.u, rec.v, rec.p);
 
-    unit_direction = unit_vector(r.direction());
-    auto a = 0.5*(unit_direction.y() + 1.0);
-    return (1.0-a)*Color(1.0, 1.0, 1.0) + a*Color(0.5, 0.7, 1.0);
+    if (!rec.mat->scatter(r, rec, attenuation, scattered))
+        return color_from_emission;
+
+    Color color_from_scatter = attenuation * ray_color(scattered, depth-1, world);
+
+    return color_from_emission + color_from_scatter;
 }
 
 Point3 Camera::defocus_disk_sample() const

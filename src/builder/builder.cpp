@@ -4,7 +4,8 @@
 ** File description:
 ** builder
 */
-
+#include "Rotate.hpp"
+#include "Trans.hpp"
 #include "builder.hpp"
 
 Builder::Builder(const char *path)
@@ -83,6 +84,7 @@ PrimList Builder::getPrimitives(std::map<std::string, shared_ptr<IMaterial>> &ma
                     setColor(prim_cfg["color"], shared_prim);
                 } else
                     throw BuilderError("Builder: error on reading prim_list: no material or color.");
+                setTransform(prim_cfg, shared_prim);
                 primitives.add(shared_prim);
             } catch (const CLibEncapsulation::LibException &e) {
                 std::cerr << "Error: " << e.what() << std::endl;
@@ -133,6 +135,17 @@ Camera Builder::getCamera()
         return camera;
     } catch (const libconfig::SettingNotFoundException &e) {
         throw BuilderError("Builder: error on reading camera : " + std::string(e.what()));
+    }
+}
+
+void Builder::setTransform(const libconfig::Setting &setting, std::shared_ptr<APrimitive> &primitive)
+{
+    if (setting.exists("translation")) {
+        Vec3 trans = Vec3::parseVec3(setting["translation"]);
+        primitive = make_shared<Trans>(primitive, trans);
+    }
+    if (setting.exists("rotation")) {
+        primitive = make_shared<Rotate>(primitive, Utils::settings_get_double(setting, "rotation"));
     }
 }
 
