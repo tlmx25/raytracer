@@ -6,6 +6,7 @@
 */
 
 #include "Triangle.hpp"
+#include <iostream>
 
 Triangle::Triangle(Point3 a, Point3 b, Point3 c, shared_ptr<IMaterial> mat) : APrimitive(mat), _a(a), _b(b), _c(c)
 {
@@ -41,6 +42,24 @@ Triangle::~Triangle()
 
 bool Triangle::hit(const Ray& r, Interval ray_t, HitRecord& rec) const
 {
+    Vec3 norme = (this->_b - this->_a) * (this->_c - this->_a);
+    Vec3 n = norme / norme.length();
+
+    auto dotedND = dot(n, r.direction());
+    if (dotedND == 0)
+        return false;
+    auto t = dot((this->_a - r.origin()), n) / dot(r.direction(), n);
+    if (t < ray_t.min || t > ray_t.max)
+        return false;
+    Vec3 T = r.origin() + t * r.direction();
+    if (dot((this->_b - this->_a) * (T - this->_a), n) < 0 ||
+        dot((this->_b - this->_a) * (T - this->_a), n) < 0 ||
+        dot((this->_b - this->_a) * (T - this->_a), n) < 0)
+            return false;
+    rec.t = t;
+    rec.p = r.at(rec.t);
+    rec.mat = this->getMaterial();
+    return true;
 }
 
 Triangle &Triangle::operator=(const Triangle &obj)
